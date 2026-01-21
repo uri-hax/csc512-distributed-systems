@@ -4,22 +4,22 @@ We will celebrate and encourage our different perspectives in this course! :)
 
 ### Meetings
 
-##### 412 Lectures are optional for attendance
+#### 412 Lectures are optional for attendance
 * **Class (412 sec 0001, Prof Wallace)**  Tyler 055, Tuesday & Thursday 12:45PM - 2:00PM
 * **Labs (412)**  Online Asynchronous
 
-##### So what about meetings for 512?
+#### So what about meetings for 512?
 
 These times are based on the current cohort's availability. In essence, they fit into the Lab's Online Asynchronous slot.
 
-*Weekly in-person check-ins:*
+##### *Weekly in-person check-ins:*
 Thursdays from 4:30 to 5:15 PM in Tyler 128
 *** totally cool to show up late if you are in a lab/class
 
-*Optional Office Hours for 512 only (Zoom):*
+##### *Optional Office Hours for 512 only (Zoom):*
 Wednesdays from 12 to 1230 PM
 
-*Final Group Presentations:*
+##### *Final Group Presentations:*
 Tuesday, April 21, 1230 to 1:45 PM in Tyler 55 (normal 412 class time)
 
 
@@ -59,7 +59,7 @@ We will run this class mirroring a working group in industry and/or research set
 | Final Group Research Paper  | 20% |
 
 
-##### Weekly Task Check-Ins
+#### Weekly Task Check-Ins
 
 Every week, each student will create and pursue at least one task towards the group effort. What are some example tasks?
 * Finding a research paper or technology and presenting it to the group.
@@ -69,19 +69,19 @@ Every week, each student will create and pursue at least one task towards the gr
 
 We will manage tasks and code in this GitHub using GitHub issues.
 
-##### Class Participation
+#### Class Participation
 
 You will be assessed by your class participation throughout the semester. Focus on being present and engaged during our meetings. Provided timely and engaging comments/responses within the discussions and activities. Challenge each other to share ideas and implement them! This is a group effort for all of us. :) 
 
-##### Final Presentation
+#### Final Presentation
 
 On April 21st from 12:30 to 1:45PM the group will make a presentation to CSC412 students about our efforts this semester. I will give a 5-minute introduction. Then, each student in 512 will give a 5-minute presentation on their efforts.
 
-##### Final Group Research Paper
+#### Final Group Research Paper
 
 We want to consolidate our efforts into a research paper to submit to a Computer Science conference in the near future. This will likely be a systems-style paper. We can discuss and find venues during our meetings. :)
 
-##### Final Letter Grade Distribution
+### Final Letter Grade Distribution
 Final letter grades are calculated using the ranges below. These numerical values might be lowered but will not be raised. Your final letter grade will be the letter corresponding to the highest cutoff value less than or equal to the final grade. For example, a final grade of 92.99 is an A- and not an A. 
 
 | | A | A- | B+ | B | B- | C+ | C | C- | D+ | D | F |
