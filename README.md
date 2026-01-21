@@ -1,8 +1,7 @@
 # csc512-distributed-systems
 
-:::tip[Welcome to CSC 512!] 
+## Welcome to CSC 512!
 We will celebrate and encourage our different perspectives in this course! :)
-:::
 
 ##### Meetings
 
