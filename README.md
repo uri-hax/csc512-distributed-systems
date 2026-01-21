@@ -88,3 +88,7 @@ Final letter grades are calculated using the ranges below. These numerical value
 | | A | A- | B+ | B | B- | C+ | C | C- | D+ | D | F |
 | - | - | - | - | - | - | - | - | - | - | - | - |
 | min | 93 | 90 | 87 | 83 | 80 | 77 | 73 | 70 | 67 | 60 | 0 |
+
+### We are here to help! :)
+
+Please contact Professor Wallace over email if you find yourself struggling, so we can seek accommodations. This could be temporary or lingering health conditions, or life situations that are affecting your learning and/or classroom experience. It is not common that we make exceptions to the late policy. But we want to ensure you learn and complete the course without overwhelming stress.
