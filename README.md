@@ -13,14 +13,15 @@ We will celebrate and encourage our different perspectives in this course! :)
 These times are based on the current cohort's availability. In essence, they fit into the Lab's Online Asynchronous slot.
 
 ##### *Weekly in-person check-ins:*
-Thursdays from 4:30 to 5:15 PM in Tyler 128
-*** totally cool to show up late if you are in a lab/class
+* Thursdays from 4:30 to 5:15 PM in Tyler 128
+* <i>Totally cool to show up late if you are in a lab/class</i>
 
 ##### *Optional Office Hours for 512 only (Zoom):*
-Wednesdays from 12 to 1230 PM
+* Wednesdays from 12 to 12:30 PM
+* Zoom Link: https://uri-edu.zoom.us/j/4018744156
 
 ##### *Final Group Presentations:*
-Tuesday, April 21, 1230 to 1:45 PM in Tyler 55 (normal 412 class time)
+* Tuesday, *April 21*, 12:30 to 1:45 PM in Tyler 55 (normal 412 class time)
 
 
 ##### Who are the Course Staff?
@@ -35,7 +36,7 @@ In CSC 512, you will have the opportunity to learn the overarching principles of
 
 This course is a semester-long group project. Our goal is to create a distributed testing environment for CSC412 and, hopefully, for other classes as well. By the end of the semester, we will have a prototype environment and a draft research paper to submit to a future conference.
 
-We will run this class mirroring a working group in industry and/or research settings. The results of our efforts should serve as a positive story when you apply for industry or academic positions.
+We will run this class mirroring a working group in industry and/or research settings. The results of our efforts should serve as a positive story when you apply for industry or academic positions. BTW I got us two Linux VMs we can all use to deploy everything in production!
 
 
 #### Student Learning Outcomes
