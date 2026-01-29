@@ -2,6 +2,18 @@
 
 We will celebrate and encourage our different perspectives in this course! :)
 
+### Languages?
+
+You can use:
+```
+C, Bash, Go, Rust, Python
+```
+
+Please do not:
+```
+C++, JS/TS
+```
+
 ### Meetings
 
 #### 412 Lectures are optional for attendance
