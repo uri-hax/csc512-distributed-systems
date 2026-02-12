@@ -1,0 +1,12 @@
+# Python submissions
+FROM python:3.11-slim
+
+# Set working directory
+WORKDIR /submission
+
+# Install any common Python packages students might need
+# Add more as needed
+RUN pip install --no-cache-dir numpy pandas sympy
+
+# Default command (will be overridden)
+CMD ["python3"]
