@@ -1,0 +1,50 @@
+[build-system]
+requires = ["setuptools>=68.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "security-toolkit"
+version = "1.0.0"
+description = "Security analysis toolkit -- SAST, SCA, IaC, DAST, and memory forensics."
+readme = "README.md"
+requires-python = ">=3.10"
+license = {text = "MIT"}
+authors = [
+    {name = "CSC512 Security Team"},
+]
+
+dependencies = [
+    "rich>=13.0",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=7.0",
+    "pytest-cov>=4.0",
+    "mypy>=1.0",
+    "ruff>=0.1",
+]
+
+[project.scripts]
+security_toolkit = "security_toolkit.cli:main"
+
+[tool.setuptools]
+packages = ["security_toolkit", "security_toolkit.core", "security_toolkit.scanners", "security_toolkit.scanners.static", "security_toolkit.scanners.static.analyzers", "security_toolkit.scanners.static.secrets", "security_toolkit.scanners.static.dependencies", "security_toolkit.scanners.static.iac", "security_toolkit.scanners.dynamic", "security_toolkit.scanners.dynamic.vulnerabilities", "security_toolkit.scanners.dynamic.forensics", "security_toolkit.scanners.dynamic.testing", "security_toolkit.reporting", "security_toolkit.utils"]
+package-dir = {"security_toolkit" = "src"}
+
+[tool.mypy]
+python_version = "3.10"
+strict = true
+warn_return_any = true
+warn_unused_configs = true
+
+[tool.ruff]
+target-version = "py310"
+line-length = 100
+
+[tool.ruff.lint]
+select = ["E", "F", "W", "I", "N", "UP", "B", "SIM"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-v --tb=short"
