@@ -1,3 +1,5 @@
+# HTTP fuzzer (Nuclei): tests web apps for vulnerabilities
+# Dependencies: nuclei CLI tool
 from __future__ import annotations
 
 import json

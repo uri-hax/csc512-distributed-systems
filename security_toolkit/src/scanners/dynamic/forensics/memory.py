@@ -1,3 +1,5 @@
+# Memory forensics scanner: analyzes process memory for secrets
+# Dependencies: volatility or similar memory analysis tools
 from __future__ import annotations
 
 import logging

@@ -1,3 +1,5 @@
+# Trivy dependency scanner: detects vulnerabilities in dependencies and container images
+# Dependencies: trivy CLI tool
 from __future__ import annotations
 
 import json

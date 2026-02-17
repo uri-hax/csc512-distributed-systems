@@ -1,3 +1,5 @@
+# Custom security detectors: application-specific checks
+# Dependencies: none (pure Python)
 from __future__ import annotations
 
 import json
