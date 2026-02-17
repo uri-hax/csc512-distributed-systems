@@ -1,12 +1,3 @@
-"""ScanEngine -- central orchestrator that dispatches jobs to plugins.
-
-Responsibilities:
-  1. Accept a :class:`TargetProfile` from the CLI layer.
-  2. Discover and filter applicable plugins.
-  3. Execute plugins (optionally in parallel).
-  4. Collect findings, deduplicate, and produce a :class:`ScanReport`.
-"""
-
 from __future__ import annotations
 
 import importlib
@@ -21,16 +12,8 @@ from security_toolkit.core.models import ScanReport, TargetProfile
 from security_toolkit.core.plugin import ScannerPlugin, instantiate_plugins
 
 logger = logging.getLogger(__name__)
-
-
-# ---------------------------------------------------------------------------
 # Scanner auto-discovery
-# ---------------------------------------------------------------------------
-
-
 def _import_all_plugins() -> None:
-    """Recursively import every module under ``security_toolkit.scanners`` so
-    that scanner classes are registered by the metaclass."""
     for importer, modname, ispkg in pkgutil.walk_packages(
         _scanners_pkg.__path__,
         prefix=_scanners_pkg.__name__ + ".",
@@ -39,22 +22,8 @@ def _import_all_plugins() -> None:
             importlib.import_module(modname)
         except Exception:
             logger.warning("Failed to import plugin module %s", modname, exc_info=True)
-
-
-# ---------------------------------------------------------------------------
 # Engine
-# ---------------------------------------------------------------------------
-
-
 class ScanEngine:
-    """Orchestrates a security scan against a profiled target.
-
-    Usage::
-
-        engine = ScanEngine(max_workers=4)
-        report = engine.run(profile)
-    """
-
     def __init__(self, *, max_workers: int = 4) -> None:
         self.max_workers = max_workers
         _import_all_plugins()
@@ -64,13 +33,8 @@ class ScanEngine:
             len(self._plugins),
             [p.name for p in self._plugins],
         )
-
-    # ------------------------------------------------------------------
     # Core run loop
-    # ------------------------------------------------------------------
-
     def run(self, profile: TargetProfile) -> ScanReport:
-        """Execute all applicable plugins and return a unified report."""
         report = ScanReport(
             target=str(profile.path or profile.image or profile.pid),
             mode=profile.mode,
@@ -118,14 +82,8 @@ class ScanEngine:
         report.sort_by_severity()
         report.finished_at = datetime.now(timezone.utc).isoformat()
         return report
-
-    # ------------------------------------------------------------------
     # Internals
-    # ------------------------------------------------------------------
-
     def _select_plugins(self, profile: TargetProfile) -> list[ScannerPlugin]:
-        """Filter plugins whose ``scan_modes`` include the profile mode
-        *and* whose ``can_handle`` returns ``True``."""
         result: list[ScannerPlugin] = []
         for plugin in self._plugins:
             if profile.mode not in plugin.scan_modes:
@@ -143,12 +101,6 @@ class ScanEngine:
         profile: TargetProfile,
         report: ScanReport,
     ) -> ScanReport:
-        """Run plugins concurrently using a thread pool.
-
-        Each plugin is expected to be I/O-bound (shelling out to external
-        tools).  ThreadPoolExecutor is sufficient and avoids the
-        serialization overhead of ProcessPoolExecutor.
-        """
         # Track plugin execution status
         plugin_status: dict[str, dict[str, object]] = {}
         for plugin in plugins:
@@ -182,6 +134,5 @@ class ScanEngine:
 
     @staticmethod
     def _run_plugin(plugin: ScannerPlugin, profile: TargetProfile):
-        """Wrapper that executes a single plugin with logging."""
         logger.info("Starting plugin: %s", plugin.name)
         return plugin.execute(profile)

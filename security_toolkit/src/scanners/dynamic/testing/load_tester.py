@@ -1,11 +1,3 @@
-"""Load tester plugin -- detects race conditions via concurrent requests.
-
-Spins up the target image, identifies web endpoints, and fires concurrent
-requests at state-mutating endpoints.  If the responses indicate inconsistent
-state (e.g., a counter not incrementing atomically), a race-condition finding
-is emitted.
-"""
-
 from __future__ import annotations
 
 import json
@@ -39,8 +31,6 @@ _REQUESTS_PER_ENDPOINT = 50
 
 
 class LoadTester(ScannerPlugin):
-    """Detect race conditions by sending concurrent requests."""
-
     name: ClassVar[str] = "load-tester"
     scan_modes: ClassVar[set[str]] = {ScanMode.RUNTIME}
 
@@ -90,17 +80,12 @@ class LoadTester(ScannerPlugin):
         finally:
             if container_name:
                 stop_and_remove_container(container_name)
-
-    # ------------------------------------------------------------------
     # Helpers
-    # ------------------------------------------------------------------
-
     @staticmethod
     def _start_service(
         image: str,
         exposed_ports: tuple[int, ...],
     ) -> tuple[str | None, int | None]:
-        """Start the image on the default bridge with port publishing."""
         target_port = next(
             (p for p in exposed_ports if p in _WEB_PORTS),
             exposed_ports[0] if exposed_ports else None,
@@ -168,7 +153,6 @@ class LoadTester(ScannerPlugin):
 
     @staticmethod
     def _run_load_tests(base_url: str, image: str) -> list[Finding]:
-        """Fire concurrent requests and check for race conditions."""
         findings: list[Finding] = []
 
         # Test 1: Counter race condition (/increment endpoint)
@@ -185,7 +169,6 @@ class LoadTester(ScannerPlugin):
 
     @staticmethod
     def _test_counter_race(base_url: str, image: str) -> Finding | None:
-        """Send concurrent requests to /increment and check atomicity."""
         increment_url = f"{base_url}/increment"
 
         # Verify endpoint exists
@@ -257,7 +240,6 @@ class LoadTester(ScannerPlugin):
 
     @staticmethod
     def _test_resource_exhaustion(base_url: str, image: str) -> Finding | None:
-        """Check if concurrent allocation requests are rate-limited."""
         allocate_url = f"{base_url}/allocate?size=100000"
 
         # Verify endpoint exists

@@ -1,13 +1,3 @@
-"""Custom runtime detectors for application-specific security risks.
-
-Launches the target service and probes for:
-  - Debug mode / development settings left enabled
-  - Endpoints that expose secrets (credentials, tokens, keys)
-  - Verbose error messages with stack traces
-  - Timing-attack vulnerable authentication
-  - Missing authentication on sensitive endpoints
-"""
-
 from __future__ import annotations
 
 import json
@@ -66,8 +56,6 @@ _SENSITIVE_ENDPOINTS = [
 
 
 class CustomDetectors(ScannerPlugin):
-    """Detect application-specific security risks at runtime."""
-
     name: ClassVar[str] = "custom-detectors"
     scan_modes: ClassVar[set[str]] = {ScanMode.RUNTIME}
 
@@ -129,11 +117,7 @@ class CustomDetectors(ScannerPlugin):
         finally:
             if container_name:
                 stop_and_remove_container(container_name)
-
-    # ------------------------------------------------------------------
     # Service management
-    # ------------------------------------------------------------------
-
     @staticmethod
     def _start_service(
         image: str,
@@ -203,14 +187,9 @@ class CustomDetectors(ScannerPlugin):
             except Exception:
                 time.sleep(delay)
         return False
-
-    # ------------------------------------------------------------------
     # Detection checks
-    # ------------------------------------------------------------------
-
     @staticmethod
     def _check_debug_mode(base_url: str, image: str) -> list[Finding]:
-        """Check if the application is running in debug/development mode."""
         findings: list[Finding] = []
 
         # Check for Werkzeug debugger
@@ -303,7 +282,6 @@ class CustomDetectors(ScannerPlugin):
 
     @staticmethod
     def _check_secret_endpoints(base_url: str, image: str) -> list[Finding]:
-        """Probe known endpoints for credential exposure."""
         findings: list[Finding] = []
 
         for endpoint in _SENSITIVE_ENDPOINTS:
@@ -338,7 +316,6 @@ class CustomDetectors(ScannerPlugin):
 
     @staticmethod
     def _check_verbose_errors(base_url: str, image: str) -> list[Finding]:
-        """Send malformed requests and check for stack traces."""
         findings: list[Finding] = []
 
         # Trigger errors by sending bad input
@@ -400,7 +377,6 @@ class CustomDetectors(ScannerPlugin):
 
     @staticmethod
     def _check_timing_attack(base_url: str, image: str) -> list[Finding]:
-        """Check for timing-based side channels in authentication."""
         findings: list[Finding] = []
         auth_url = f"{base_url}/sensitive-operation"
 
@@ -460,7 +436,6 @@ class CustomDetectors(ScannerPlugin):
 
     @staticmethod
     def _check_auth_bypass(base_url: str, image: str) -> list[Finding]:
-        """Check if auth-protected endpoints leak credentials in error messages."""
         findings: list[Finding] = []
 
         try:
@@ -498,7 +473,6 @@ class CustomDetectors(ScannerPlugin):
 
 
 def _has_stack_trace(body: str) -> bool:
-    """Heuristic check for stack trace in response body."""
     indicators = [
         "Traceback (most recent call last)",
         'File "',

@@ -1,10 +1,3 @@
-"""Resource monitor plugin -- detects memory leaks and resource exhaustion.
-
-Starts the target container, takes baseline resource measurements, triggers
-operations that should cause resource growth (e.g., hitting a /leak endpoint),
-and compares final measurements to detect abnormal resource consumption.
-"""
-
 from __future__ import annotations
 
 import json
@@ -36,7 +29,6 @@ _MEMORY_GROWTH_THRESHOLD = 50  # 50% growth
 
 
 def _parse_memory(mem_str: str) -> float:
-    """Parse Docker stats memory string (e.g. '15.2MiB') to bytes."""
     mem_str = mem_str.strip()
     multipliers = {
         "B": 1,
@@ -59,8 +51,6 @@ def _parse_memory(mem_str: str) -> float:
 
 
 class ResourceMonitor(ScannerPlugin):
-    """Monitor container resource usage to detect leaks."""
-
     name: ClassVar[str] = "resource-monitor"
     scan_modes: ClassVar[set[str]] = {ScanMode.RUNTIME}
 
@@ -112,9 +102,6 @@ class ResourceMonitor(ScannerPlugin):
         finally:
             if container_name:
                 stop_and_remove_container(container_name)
-
-    # ------------------------------------------------------------------
-
     @staticmethod
     def _start_service(
         image: str,
@@ -187,7 +174,6 @@ class ResourceMonitor(ScannerPlugin):
 
     @staticmethod
     def _get_container_memory(container_name: str) -> float:
-        """Get current memory usage in bytes via docker stats."""
         try:
             result = subprocess.run(
                 [
@@ -214,7 +200,6 @@ class ResourceMonitor(ScannerPlugin):
     def _monitor_resources(
         container_name: str, base_url: str, image: str
     ) -> list[Finding]:
-        """Measure resource usage before and after triggering leak endpoints."""
         findings: list[Finding] = []
 
         # Take baseline measurement
@@ -330,12 +315,6 @@ class ResourceMonitor(ScannerPlugin):
     def _check_url_only_resources(
         base_url: str, label: str
     ) -> list[Finding]:
-        """Run resource checks against a live URL without Docker stats.
-
-        When no Docker image is provided we cannot measure container memory,
-        but we can still exercise leak/allocate/connection-leak endpoints
-        and observe behaviour.
-        """
         findings: list[Finding] = []
 
         # Test connection leaks

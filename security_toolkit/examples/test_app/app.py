@@ -1,5 +1,3 @@
-"""Simple vulnerable Flask app for security toolkit testing."""
-
 import os
 import time
 import threading
@@ -7,18 +5,12 @@ from flask import Flask, request, jsonify
 import requests
 
 app = Flask(__name__)
-
-# --- Secrets loaded into memory (memory forensics target) ---
 DB_URL = os.getenv("DATABASE_URL", "postgresql://admin:s3cret-passw0rd@db:5432/myapp")
 API_KEY = os.getenv("API_KEY", "AKIAIOSFODNN7EXAMPLE")
 SECRET_TOKEN = os.getenv(
     "SECRET_TOKEN", "Bearer eyJhbGciOiJIUzI1NiJ9.eyJ1c2VyIjoiYWRtaW4ifQ.SflKxwRJ"
 )
-
-# --- Race condition: non-atomic counter ---
 counter = 0
-
-# --- Resource leak list ---
 leak_store = []
 open_connections = []
 
