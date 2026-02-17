@@ -1,3 +1,5 @@
+# Semgrep SAST scanner: runs multiple rulesets, consolidates noisy false positives
+# Dependencies: semgrep CLI tool, sandbox.run_with_limits for resource control
 from __future__ import annotations
 
 import json

@@ -1,3 +1,5 @@
+# Plugin system: base class and metaclass registry for auto-discovering scanner plugins
+# To create a plugin: subclass ScannerPlugin, set name and scan_modes, implement can_handle() and execute()
 from __future__ import annotations
 
 import logging

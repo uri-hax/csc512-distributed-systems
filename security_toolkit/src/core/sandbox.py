@@ -1,3 +1,5 @@
+# Sandbox utilities: run subprocesses and containers with resource limits and network isolation
+# Dependencies: resource (rlimits), subprocess (Docker commands), uuid (unique names)
 from __future__ import annotations
 
 import logging

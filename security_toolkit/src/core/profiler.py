@@ -1,3 +1,5 @@
+# Target profiler: detects languages, frameworks (Docker/K8s/Terraform), and exposed ports
+# Returns TargetProfile used by engine to select applicable plugins
 from __future__ import annotations
 
 import logging

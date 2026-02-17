@@ -1,3 +1,5 @@
+# Container vulnerability scanner: checks running containers
+# Dependencies: Docker, trivy
 from __future__ import annotations
 
 import json

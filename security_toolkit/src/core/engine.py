@@ -1,3 +1,5 @@
+# Scan engine: discovers plugins, selects applicable ones, runs them in parallel, deduplicates findings
+# Dependencies: importlib/pkgutil (plugin discovery), ThreadPoolExecutor (parallel execution)
 from __future__ import annotations
 
 import importlib

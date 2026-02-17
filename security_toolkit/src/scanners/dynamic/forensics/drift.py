@@ -1,3 +1,5 @@
+# Container drift detector: compares running container to base image
+# Dependencies: Docker
 from __future__ import annotations
 
 import logging

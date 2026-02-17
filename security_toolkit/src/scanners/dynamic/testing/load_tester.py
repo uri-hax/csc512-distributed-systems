@@ -1,3 +1,5 @@
+# Load tester: stress tests applications
+# Dependencies: locust or similar load testing tools
 from __future__ import annotations
 
 import json

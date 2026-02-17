@@ -1,3 +1,5 @@
+# IaC config scanner: checks Terraform/K8s configs for security issues
+# Dependencies: checkov or tfsec CLI tools
 from __future__ import annotations
 
 import json

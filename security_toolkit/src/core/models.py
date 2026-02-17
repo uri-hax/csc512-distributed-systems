@@ -1,3 +1,5 @@
+# Core data models: NormalizedSeverity, ScanMode, TargetProfile, Finding, ScanReport
+# Finding uses fingerprinting for deduplication; ScanReport aggregates findings and plugin status
 from __future__ import annotations
 
 import hashlib

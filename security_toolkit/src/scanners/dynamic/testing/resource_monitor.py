@@ -1,3 +1,5 @@
+# Resource monitor: tracks CPU/memory during scans
+# Dependencies: psutil
 from __future__ import annotations
 
 import json

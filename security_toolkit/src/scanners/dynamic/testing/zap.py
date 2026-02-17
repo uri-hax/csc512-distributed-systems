@@ -1,3 +1,5 @@
+# OWASP ZAP scanner: automated web app security testing
+# Dependencies: ZAP CLI tool, Docker
 from __future__ import annotations
 
 import json

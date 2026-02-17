@@ -1,3 +1,5 @@
+# CLI entry point: parses arguments, profiles target, runs scan engine, outputs reports
+# Commands: scan (source code), inspect (image/pid/url), full (both)
 from __future__ import annotations
 
 import argparse

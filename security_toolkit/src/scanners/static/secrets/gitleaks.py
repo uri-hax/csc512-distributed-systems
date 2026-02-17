@@ -1,3 +1,5 @@
+# Gitleaks secret scanner: detects hardcoded credentials in git history and source files
+# Dependencies: gitleaks CLI tool
 from __future__ import annotations
 
 import json
