@@ -129,7 +129,9 @@ COPY src/scanners/    ./security_toolkit/scanners/
 COPY src/reporting/   ./security_toolkit/reporting/
 COPY src/utils/       ./security_toolkit/utils/
 COPY src/__init__.py  ./security_toolkit/__init__.py
+COPY src/__main__.py  ./security_toolkit/__main__.py
 COPY src/cli.py       ./security_toolkit/cli.py
+COPY README.md    ./security_toolkit/README.md
 
 # Install so the `security_toolkit` console script is created on PATH
 RUN pip install --no-cache-dir .
