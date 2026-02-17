@@ -21,12 +21,14 @@ class TrivySCAScanner(ScannerPlugin):
     name: ClassVar[str] = "trivy-sca"
     scan_modes: ClassVar[set[str]] = {ScanMode.SOURCE}
 
+    # Check if this scanner can run for the given target
     def can_handle(self, profile: TargetProfile) -> bool:
         if not check_tool_available("trivy"):
             logger.warning("trivy not found on PATH -- skipping SCA")
             return False
         return profile.mode == ScanMode.SOURCE and profile.path is not None
 
+    # Run the scan and return findings
     def execute(self, profile: TargetProfile) -> list[Finding]:
         assert profile.path is not None
         cmd = [

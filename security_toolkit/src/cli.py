@@ -233,7 +233,7 @@ def main(argv: list[str] | None = None) -> None:
     if args.output:
         json_path = Path(args.output)
 
-        # Normalize path: directory → report.json, no-suffix → add .json
+        # Auto-add .json extension if missing, or use report.json if path is a directory
         if json_path.is_dir() or (not json_path.suffix):
             json_path = json_path / "report.json" if json_path.is_dir() else json_path.with_suffix(".json")
 

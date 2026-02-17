@@ -14,6 +14,7 @@ _DEFAULT_CPU_LIMIT_SECONDS = 300
 _DEFAULT_MEM_LIMIT_BYTES = 2 * 1024 * 1024 * 1024  # 2 GiB
 
 
+# Called in child process before exec to set resource limits
 def _preexec_limits(
     cpu: int = _DEFAULT_CPU_LIMIT_SECONDS,
     mem: int = _DEFAULT_MEM_LIMIT_BYTES,
@@ -61,6 +62,7 @@ class IsolatedNetwork:
 
 def create_isolated_network() -> IsolatedNetwork:
     name = f"{_NETWORK_PREFIX}{uuid.uuid4().hex[:8]}"
+    # --internal flag prevents outbound internet access from containers on this network
     result = subprocess.run(
         ["docker", "network", "create", "--internal", "--driver", "bridge", name],
         capture_output=True,
@@ -97,6 +99,7 @@ def run_container_sandboxed(
     timeout: int = 120,
 ) -> dict[str, Any]:
     container_name = f"sectoolkit_{uuid.uuid4().hex[:8]}"
+    # Security hardening: drop all capabilities, prevent privilege escalation, limit processes
     cmd = [
         "docker",
         "run",
@@ -134,6 +137,7 @@ def run_container_sandboxed(
         text=True,
         timeout=timeout,
     )
+    # Extract container ID from last line of output (handles both detached and non-detached modes)
     container_id = result.stdout.strip().split("\n")[-1] if result.stdout else ""
     return {
         "container_id": container_id,

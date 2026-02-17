@@ -38,6 +38,7 @@ _SEVERITY_MAP: dict[str, NormalizedSeverity] = {
 
 
 def normalize_severity(raw: str) -> NormalizedSeverity:
+    # Falls back to MEDIUM for unknown labels to ensure they're not ignored
     return _SEVERITY_MAP.get(raw.strip().lower(), NormalizedSeverity.MEDIUM)
 # Scan mode
 class ScanMode:
@@ -76,6 +77,7 @@ class Finding:
         if not self.fingerprint:
             self.fingerprint = self._compute_fingerprint()
     def _compute_fingerprint(self) -> str:
+        # Use rule_id + file + line + title to deduplicate findings from overlapping rulesets
         blob = f"{self.rule_id}|{self.file_path}|{self.line}|{self.title}"
         return hashlib.sha256(blob.encode()).hexdigest()[:16]
 
@@ -111,6 +113,7 @@ class ScanReport:
     plugin_execution: dict[str, dict[str, Any]] = field(default_factory=dict)
     # Deduplication
     def deduplicate(self) -> None:
+        # Keep highest severity when same finding appears multiple times
         seen: dict[str, Finding] = {}
         for f in self.findings:
             existing = seen.get(f.fingerprint)

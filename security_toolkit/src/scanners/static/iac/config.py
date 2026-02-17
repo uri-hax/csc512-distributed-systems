@@ -21,6 +21,7 @@ class IaCConfigScanner(ScannerPlugin):
     name: ClassVar[str] = "iac-config"
     scan_modes: ClassVar[set[str]] = {ScanMode.SOURCE}
 
+    # Check if this scanner can run for the given target
     def can_handle(self, profile: TargetProfile) -> bool:
         if not check_tool_available("trivy"):
             logger.warning("trivy not found on PATH -- skipping IaC config scan")
@@ -31,6 +32,7 @@ class IaCConfigScanner(ScannerPlugin):
             and (profile.has_docker or profile.has_k8s or profile.has_terraform)
         )
 
+    # Run the scan and return findings
     def execute(self, profile: TargetProfile) -> list[Finding]:
         assert profile.path is not None
         return self._run_trivy_config(profile)

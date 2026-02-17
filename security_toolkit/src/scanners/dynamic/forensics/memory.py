@@ -148,6 +148,7 @@ class MemoryForensicsScanner(ScannerPlugin):
     name: ClassVar[str] = "memory-forensics"
     scan_modes: ClassVar[set[str]] = {ScanMode.RUNTIME}
 
+    # Check if this scanner can run for the given target
     def can_handle(self, profile: TargetProfile) -> bool:
         if profile.image is None:
             return False
@@ -156,6 +157,7 @@ class MemoryForensicsScanner(ScannerPlugin):
             return False
         return True
 
+    # Run the scan and return findings
     def execute(self, profile: TargetProfile) -> list[Finding]:
         assert profile.image is not None
         network: IsolatedNetwork | None = None

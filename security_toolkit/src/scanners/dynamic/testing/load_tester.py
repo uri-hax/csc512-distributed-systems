@@ -34,6 +34,7 @@ class LoadTester(ScannerPlugin):
     name: ClassVar[str] = "load-tester"
     scan_modes: ClassVar[set[str]] = {ScanMode.RUNTIME}
 
+    # Check if this scanner can run for the given target
     def can_handle(self, profile: TargetProfile) -> bool:
         if profile.image is None and profile.service_url is None:
             return False
@@ -45,6 +46,7 @@ class LoadTester(ScannerPlugin):
             return False
         return bool(set(profile.exposed_ports) & _WEB_PORTS)
 
+    # Run the scan and return findings
     def execute(self, profile: TargetProfile) -> list[Finding]:
         assert profile.image is not None or profile.service_url is not None
         container_name: str | None = None

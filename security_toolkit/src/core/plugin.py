@@ -9,12 +9,13 @@ from security_toolkit.core.models import Finding, ScanMode, TargetProfile
 logger = logging.getLogger(__name__)
 
 
+# Metaclass that auto-registers plugin subclasses when they're defined
 class _PluginRegistry(ABCMeta):
     _registry: ClassVar[dict[str, type[ScannerPlugin]]] = {}
 
     def __init__(cls, name: str, bases: tuple, namespace: dict) -> None:
         super().__init__(name, bases, namespace)
-        # Skip the base class itself and any remaining abstract classes.
+        # Only register concrete classes (skip base class and abstract classes)
         if bases and not getattr(cls, "__abstractmethods__", frozenset()):
             plugin_name: str = getattr(cls, "name", name)
             _PluginRegistry._registry[plugin_name] = cls  # type: ignore[assignment]
