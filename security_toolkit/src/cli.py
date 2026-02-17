@@ -1,23 +1,3 @@
-"""CLI entry point for ``security_toolkit``.
-
-Usage examples::
-
-    # Source mode -- scan a local directory
-    security_toolkit scan --target ./my-repo
-
-    # Runtime mode -- scan a Docker image
-    security_toolkit inspect --image my-app:latest
-
-    # Runtime mode -- inspect a running process
-    security_toolkit inspect --pid 12345
-
-    # Full mode -- combined source + runtime scan
-    security_toolkit full --target ./my-repo --image my-app:latest
-
-    # Write JSON report to file
-    security_toolkit scan --target ./my-repo --output report.json
-"""
-
 from __future__ import annotations
 
 import argparse
@@ -35,15 +15,8 @@ from security_toolkit.reporting.json_report import write_json_report
 from security_toolkit.reporting.markdown_report import write_markdown_report
 
 logger = logging.getLogger("security_toolkit")
-
-
-# ---------------------------------------------------------------------------
 # Argument parser
-# ---------------------------------------------------------------------------
-
-
 def _add_common_args(parser: argparse.ArgumentParser) -> None:
-    """Add --output, --workers, --fail-on, --include-raw to a subparser."""
     parser.add_argument(
         "--output",
         "-o",
@@ -88,8 +61,6 @@ def _build_parser() -> argparse.ArgumentParser:
     )
 
     sub = parser.add_subparsers(dest="command", required=True)
-
-    # --- scan (source mode) ------------------------------------------------
     scan_parser = sub.add_parser(
         "scan",
         help="Run static analysis on a source directory.",
@@ -101,8 +72,6 @@ def _build_parser() -> argparse.ArgumentParser:
         help="Path to the directory to scan.",
     )
     _add_common_args(scan_parser)
-
-    # --- inspect (runtime mode) --------------------------------------------
     inspect_parser = sub.add_parser(
         "inspect",
         help="Inspect a Docker image, running process, or live service.",
@@ -131,8 +100,6 @@ def _build_parser() -> argparse.ArgumentParser:
         ),
     )
     _add_common_args(inspect_parser)
-
-    # --- full (source + runtime combined) ----------------------------------
     full_parser = sub.add_parser(
         "full",
         help="Run both source and runtime analysis, producing a single merged report.",
@@ -163,13 +130,7 @@ def _build_parser() -> argparse.ArgumentParser:
     _add_common_args(full_parser)
 
     return parser
-
-
-# ---------------------------------------------------------------------------
 # Logging setup
-# ---------------------------------------------------------------------------
-
-
 def _configure_logging(verbosity: int) -> None:
     level = logging.WARNING
     if verbosity == 1:
@@ -183,12 +144,7 @@ def _configure_logging(verbosity: int) -> None:
         datefmt="%H:%M:%S",
         stream=sys.stderr,
     )
-
-
-# ---------------------------------------------------------------------------
 # Fail-on logic
-# ---------------------------------------------------------------------------
-
 _FAIL_ON_MAP: dict[str, NormalizedSeverity] = {
     "critical": NormalizedSeverity.CRITICAL,
     "high": NormalizedSeverity.HIGH,
@@ -196,21 +152,13 @@ _FAIL_ON_MAP: dict[str, NormalizedSeverity] = {
     "low": NormalizedSeverity.LOW,
     "info": NormalizedSeverity.INFO,
 }
-
-
-# ---------------------------------------------------------------------------
 # Main
-# ---------------------------------------------------------------------------
-
-
 def main(argv: list[str] | None = None) -> None:
     parser = _build_parser()
     args = parser.parse_args(argv)
     _configure_logging(args.verbose)
 
     engine = ScanEngine(max_workers=args.workers)
-
-    # --- Profile target(s) -------------------------------------------------
     try:
         if args.command == "scan":
             profile = profile_target(target=args.target)
@@ -280,8 +228,6 @@ def main(argv: list[str] | None = None) -> None:
     except ValueError as exc:
         logger.error("Target profiling failed: %s", exc)
         sys.exit(2)
-
-    # --- Output ------------------------------------------------------------
     print_console_report(report)
 
     if args.output:
@@ -299,8 +245,6 @@ def main(argv: list[str] | None = None) -> None:
 
         write_markdown_report(report, md_path, include_raw=args.include_raw)
         logger.info("Markdown report saved to %s", md_path)
-
-    # --- Exit code ---------------------------------------------------------
     fail_threshold = _FAIL_ON_MAP.get(args.fail_on, NormalizedSeverity.HIGH)
     if any(f.severity >= fail_threshold for f in report.findings):
         sys.exit(1)

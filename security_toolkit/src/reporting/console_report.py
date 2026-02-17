@@ -1,21 +1,10 @@
-"""Rich-text console report renderer.
-
-Uses the ``rich`` library to display a colour-coded summary of scan
-results directly in the terminal.  Falls back to plain-text tables
-when ``rich`` is not installed.
-"""
-
 from __future__ import annotations
 
 import sys
 from typing import TextIO
 
 from security_toolkit.core.models import NormalizedSeverity, ScanReport
-
-# ---------------------------------------------------------------------------
 # Severity -> colour mapping (rich markup)
-# ---------------------------------------------------------------------------
-
 _SEVERITY_STYLE: dict[NormalizedSeverity, str] = {
     NormalizedSeverity.CRITICAL: "bold white on red",
     NormalizedSeverity.HIGH: "bold red",
@@ -31,30 +20,18 @@ _SEVERITY_LABEL: dict[NormalizedSeverity, str] = {
     NormalizedSeverity.LOW: "LOW",
     NormalizedSeverity.INFO: "INFO",
 }
-
-# ---------------------------------------------------------------------------
 # Verdict
-# ---------------------------------------------------------------------------
-
 _PASS_THRESHOLD = NormalizedSeverity.HIGH  # HIGH or above = fail
 
 
 def _verdict(report: ScanReport) -> tuple[str, str]:
-    """Return ``(label, style)`` for the overall pass/fail verdict."""
     if any(f.severity >= _PASS_THRESHOLD for f in report.findings):
         return "FAIL", "bold white on red"
     if report.findings:
         return "WARN", "bold yellow"
     return "PASS", "bold green"
-
-
-# ---------------------------------------------------------------------------
 # Rich renderer
-# ---------------------------------------------------------------------------
-
-
 def _render_rich(report: ScanReport) -> None:
-    """Print a colourful summary using the ``rich`` library."""
     from rich.console import Console
     from rich.panel import Panel
     from rich.table import Table
@@ -132,15 +109,8 @@ def _render_rich(report: ScanReport) -> None:
         )
     )
     console.print()
-
-
-# ---------------------------------------------------------------------------
 # Plain-text fallback
-# ---------------------------------------------------------------------------
-
-
 def _render_plain(report: ScanReport, stream: TextIO | None = None) -> None:
-    """Print a plain-text summary (no colour)."""
     out = stream or sys.stdout
     counts = report.severity_counts()
     verdict_label, _ = _verdict(report)
@@ -177,18 +147,8 @@ def _render_plain(report: ScanReport, stream: TextIO | None = None) -> None:
             out.write(f"  - {err}\n")
 
     out.write(f"\nVerdict: {verdict_label}\n\n")
-
-
-# ---------------------------------------------------------------------------
 # Public API
-# ---------------------------------------------------------------------------
-
-
 def print_console_report(report: ScanReport) -> None:
-    """Render the report to the console.
-
-    Uses ``rich`` if available, otherwise falls back to plain text.
-    """
     try:
         import rich  # noqa: F401
 

@@ -1,9 +1,3 @@
-"""Trivy-based Software Composition Analysis (SCA) scanner.
-
-Runs ``trivy filesystem`` against the target directory to scan lock files
-and manifests for known CVEs in dependencies.
-"""
-
 from __future__ import annotations
 
 import json
@@ -24,8 +18,6 @@ logger = logging.getLogger(__name__)
 
 
 class TrivySCAScanner(ScannerPlugin):
-    """Trivy filesystem-mode scanner for dependency CVEs."""
-
     name: ClassVar[str] = "trivy-sca"
     scan_modes: ClassVar[set[str]] = {ScanMode.SOURCE}
 
@@ -65,9 +57,6 @@ class TrivySCAScanner(ScannerPlugin):
             return []
 
         return self._parse(data)
-
-    # ------------------------------------------------------------------
-
     @staticmethod
     def _parse(data: dict) -> list[Finding]:
         findings: list[Finding] = []

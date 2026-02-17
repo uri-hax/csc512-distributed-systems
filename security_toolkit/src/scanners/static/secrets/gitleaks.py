@@ -1,13 +1,3 @@
-"""Git secret scanning plugin -- detect secrets committed to Git history.
-
-Uses `gitleaks` to scan the repository (including historical commits) for
-leaked API keys, passwords, tokens, and other sensitive data that may have
-been committed and potentially removed but still exist in Git history.
-
-This complements the Semgrep SAST plugin which only scans the current
-working tree, and the memory-forensics plugin which scans runtime memory.
-"""
-
 from __future__ import annotations
 
 import json
@@ -58,8 +48,6 @@ _RULE_SEVERITY: dict[str, NormalizedSeverity] = {
 
 
 class GitleaksScanner(ScannerPlugin):
-    """Scan Git repositories for committed secrets using gitleaks."""
-
     name: ClassVar[str] = "gitleaks"
     scan_modes: ClassVar[set[str]] = {ScanMode.SOURCE}
 
@@ -89,14 +77,9 @@ class GitleaksScanner(ScannerPlugin):
         except Exception:
             logger.exception("Gitleaks scan failed")
             return []
-
-    # ------------------------------------------------------------------
     # Scanner
-    # ------------------------------------------------------------------
-
     @staticmethod
     def _run_gitleaks(target: Path) -> list[Finding]:
-        """Run gitleaks and parse JSON results."""
         with tempfile.NamedTemporaryFile(
             mode="w", suffix=".json", delete=False, prefix="gitleaks_"
         ) as f:

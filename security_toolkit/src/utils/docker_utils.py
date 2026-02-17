@@ -1,5 +1,3 @@
-"""Docker API helpers for inspecting images and running containers."""
-
 from __future__ import annotations
 
 import json
@@ -11,7 +9,6 @@ logger = logging.getLogger(__name__)
 
 
 def docker_available() -> bool:
-    """Return ``True`` if the Docker daemon is reachable."""
     try:
         result = subprocess.run(
             ["docker", "info"],
@@ -25,7 +22,6 @@ def docker_available() -> bool:
 
 
 def image_exists(image: str) -> bool:
-    """Return ``True`` if *image* is available locally."""
     result = subprocess.run(
         ["docker", "image", "inspect", image],
         capture_output=True,
@@ -36,7 +32,6 @@ def image_exists(image: str) -> bool:
 
 
 def pull_image(image: str, *, timeout: int = 300) -> bool:
-    """Pull *image* from the registry.  Returns ``True`` on success."""
     logger.info("Pulling image: %s", image)
     result = subprocess.run(
         ["docker", "pull", image],
@@ -48,7 +43,6 @@ def pull_image(image: str, *, timeout: int = 300) -> bool:
 
 
 def inspect_image(image: str) -> dict[str, Any]:
-    """Return parsed ``docker inspect`` JSON for *image*."""
     result = subprocess.run(
         ["docker", "image", "inspect", image],
         capture_output=True,
@@ -62,7 +56,6 @@ def inspect_image(image: str) -> dict[str, Any]:
 
 
 def get_image_digest(image: str) -> str:
-    """Return the repo-digest (or image ID) for *image*."""
     result = subprocess.run(
         ["docker", "inspect", "--format", "{{index .RepoDigests 0}}", image],
         capture_output=True,
@@ -83,7 +76,6 @@ def get_image_digest(image: str) -> str:
 
 
 def exec_in_container(container: str, cmd: list[str], *, timeout: int = 60) -> str:
-    """Run a command inside a running container and return stdout."""
     result = subprocess.run(
         ["docker", "exec", container] + cmd,
         capture_output=True,

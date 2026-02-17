@@ -1,11 +1,3 @@
-"""JSON report generator.
-
-Serialises a :class:`ScanReport` to a structured, human-readable JSON file.
-
-The default output omits noisy vendor ``raw`` blobs so the file is easy to
-read and review.  Pass ``include_raw=True`` for full traceability.
-"""
-
 from __future__ import annotations
 
 import logging
@@ -22,12 +14,6 @@ def write_json_report(
     *,
     include_raw: bool = False,
 ) -> Path:
-    """Write *report* as prettified JSON to *output_path*.
-
-    If output_path is a directory, generates report.json.
-    If output_path has no suffix, adds .json extension.
-    Creates parent directories if needed.  Returns the resolved path.
-    """
     output_path = output_path.resolve()
 
     # If path is a directory, use report.json

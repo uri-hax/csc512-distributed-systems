@@ -1,22 +1,3 @@
-"""OWASP ZAP DAST plugin -- comprehensive web application security testing.
-
-Uses the OWASP ZAP (Zed Attack Proxy) to perform active and passive
-scanning of web applications exposed by Docker images.
-
-ZAP provides:
-  - Spider/crawler to discover endpoints
-  - Passive scan (analyzes traffic for security issues)
-  - Active scan (sends attack payloads to find vulnerabilities)
-  - AJAX spider for JavaScript-heavy apps
-
-Flow:
-  1. Start the target image with port publishing.
-  2. Wait for the service to become healthy.
-  3. Run ZAP baseline or full scan via the ZAP Docker image.
-  4. Parse the JSON report for findings.
-  5. Tear down ZAP and the target container.
-"""
-
 from __future__ import annotations
 
 import json
@@ -63,8 +44,6 @@ _ZAP_CONFIDENCE: dict[int, str] = {
 
 
 class ZAPScanner(ScannerPlugin):
-    """DAST scanning of web services using OWASP ZAP."""
-
     name: ClassVar[str] = "zap"
     scan_modes: ClassVar[set[str]] = {ScanMode.RUNTIME}
 
@@ -136,17 +115,12 @@ class ZAPScanner(ScannerPlugin):
         finally:
             if container_name:
                 stop_and_remove_container(container_name)
-
-    # ------------------------------------------------------------------
     # Service lifecycle
-    # ------------------------------------------------------------------
-
     @staticmethod
     def _start_service(
         image: str,
         exposed_ports: tuple[int, ...],
     ) -> tuple[str | None, int | None]:
-        """Start the image on the default bridge with port publishing."""
         target_port = next(
             (p for p in exposed_ports if p in _WEB_PORTS),
             exposed_ports[0] if exposed_ports else None,
@@ -202,7 +176,6 @@ class ZAPScanner(ScannerPlugin):
 
     @staticmethod
     def _wait_for_health(url: str, retries: int = 10, delay: int = 2) -> bool:
-        """Poll *url* until it returns a response."""
         import urllib.request
         import urllib.error
 
@@ -220,14 +193,9 @@ class ZAPScanner(ScannerPlugin):
             except Exception:
                 time.sleep(delay)
         return False
-
-    # ------------------------------------------------------------------
     # ZAP Docker image runner
-    # ------------------------------------------------------------------
-
     @staticmethod
     def _zap_docker_available() -> bool:
-        """Check if the ZAP Docker image is available."""
         try:
             result = subprocess.run(
                 ["docker", "image", "inspect", "ghcr.io/zaproxy/zaproxy:stable"],
@@ -251,7 +219,6 @@ class ZAPScanner(ScannerPlugin):
 
     @staticmethod
     def _run_zap_docker(target_url: str, host_port: int) -> list[Finding]:
-        """Run ZAP baseline scan using the official ZAP Docker image."""
         import uuid
 
         zap_container = f"sectoolkit_zap_runner_{uuid.uuid4().hex[:8]}"
@@ -317,14 +284,9 @@ class ZAPScanner(ScannerPlugin):
                 return []
 
             return ZAPScanner._parse_zap_json(report_path)
-
-    # ------------------------------------------------------------------
     # ZAP CLI runner
-    # ------------------------------------------------------------------
-
     @staticmethod
     def _run_zap_cli(target_url: str) -> list[Finding]:
-        """Run ZAP using the local zap-cli tool."""
         with tempfile.NamedTemporaryFile(
             mode="w", suffix=".json", delete=False, prefix="zap_"
         ) as f:
@@ -355,14 +317,9 @@ class ZAPScanner(ScannerPlugin):
         findings = ZAPScanner._parse_zap_json(Path(output_file))
         Path(output_file).unlink(missing_ok=True)
         return findings
-
-    # ------------------------------------------------------------------
     # Report parsing
-    # ------------------------------------------------------------------
-
     @staticmethod
     def _parse_zap_json(report_path: Path) -> list[Finding]:
-        """Parse ZAP JSON report into Finding objects."""
         findings: list[Finding] = []
 
         try:

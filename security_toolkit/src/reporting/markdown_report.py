@@ -1,9 +1,3 @@
-"""Markdown report generator.
-
-Serialises a :class:`ScanReport` to a detailed, human-readable Markdown
-document suitable for code review, documentation, or CI/CD artifacts.
-"""
-
 from __future__ import annotations
 
 import logging
@@ -28,12 +22,6 @@ def write_markdown_report(
     *,
     include_raw: bool = False,
 ) -> Path:
-    """Write *report* as Markdown to *output_path*.
-
-    If output_path is a directory, generates report.md.
-    If output_path has no suffix, adds .md extension.
-    Creates parent directories if needed.  Returns the resolved path.
-    """
     output_path = output_path.resolve()
 
     # If path is a directory, use report.md
@@ -53,7 +41,6 @@ def write_markdown_report(
 
 
 def _render_markdown(report: ScanReport, *, include_raw: bool = False) -> str:
-    """Render the full report as a Markdown string."""
     counts = report.severity_counts()
     verdict = _verdict(report)
     lines: list[str] = []

@@ -1,23 +1,3 @@
-"""Semgrep SAST scanner with multi-ruleset strategy.
-
-Orchestrates Semgrep with overlapping rulesets and deduplicates findings
-based on rule-ID + file + line fingerprints.
-
-Mandatory rulesets:
-  - p/security-audit   (general vulnerabilities)
-  - p/secrets          (hardcoded credentials)
-  - p/owasp-top-ten    (web vulnerabilities)
-  - p/ci               (CI/CD pipeline flaws)
-  - p/supply-chain     (supply chain risks)
-
-Language-specific sets are added dynamically based on profiler output.
-
-False-positive reduction:
-  Semgrep community rules include broad patterns that flag safe internal
-  code (e.g. ``dynamic-urllib-use-detected`` on localhost health checks).
-  A post-processing filter consolidates and downgrades known noisy rules.
-"""
-
 from __future__ import annotations
 
 import json
@@ -37,11 +17,7 @@ from security_toolkit.core.sandbox import run_with_limits
 from security_toolkit.utils.process_utils import check_tool_available
 
 logger = logging.getLogger(__name__)
-
-# ---------------------------------------------------------------------------
 # False-positive reduction
-# ---------------------------------------------------------------------------
-
 # Rules known to produce high false-positive rates in internal / tool code.
 # When triggered more than _FP_CONSOLIDATION_THRESHOLD times in a scan,
 # they are consolidated into a single INFO-level advisory.
@@ -63,11 +39,7 @@ _SAFE_URLLIB_PATH_PATTERNS: list[re.Pattern[str]] = [
     re.compile(r"internal/"),
     re.compile(r"health[_-]?check"),
 ]
-
-# ---------------------------------------------------------------------------
 # Ruleset configuration
-# ---------------------------------------------------------------------------
-
 _MANDATORY_RULESETS: list[str] = [
     "p/security-audit",
     "p/secrets",
@@ -93,16 +65,8 @@ _LANGUAGE_RULESETS: dict[str, str] = {
     "bash": "p/bash",
     "elixir": "p/elixir",
 }
-
-
-# ---------------------------------------------------------------------------
 # Plugin
-# ---------------------------------------------------------------------------
-
-
 class SemgrepScanner(ScannerPlugin):
-    """Multi-ruleset Semgrep SAST scanner."""
-
     name: ClassVar[str] = "semgrep"
     scan_modes: ClassVar[set[str]] = {ScanMode.SOURCE}
 
@@ -119,11 +83,7 @@ class SemgrepScanner(ScannerPlugin):
 
         raw_results = self._run_semgrep(profile, rulesets)
         return self._parse_results(raw_results)
-
-    # ------------------------------------------------------------------
     # Internal
-    # ------------------------------------------------------------------
-
     @staticmethod
     def _build_rulesets(profile: TargetProfile) -> list[str]:
         rulesets = list(_MANDATORY_RULESETS)
@@ -138,8 +98,6 @@ class SemgrepScanner(ScannerPlugin):
         profile: TargetProfile,
         rulesets: list[str],
     ) -> list[dict]:
-        """Invoke semgrep once with all rulesets combined via
-        ``--config`` flags and return the parsed JSON results list."""
         cmd = ["semgrep", "scan", "--json", "--quiet", "--no-git-ignore"]
         for rs in rulesets:
             cmd.extend(["--config", rs])
@@ -166,7 +124,6 @@ class SemgrepScanner(ScannerPlugin):
 
     @staticmethod
     def _parse_results(raw_results: list[dict]) -> list[Finding]:
-        """Convert Semgrep JSON results to canonical :class:`Finding` list."""
         findings: list[Finding] = []
         for r in raw_results:
             extra = r.get("extra", {})
@@ -185,22 +142,9 @@ class SemgrepScanner(ScannerPlugin):
                 )
             )
         return SemgrepScanner._reduce_false_positives(findings)
-
-    # ------------------------------------------------------------------
     # False-positive reduction
-    # ------------------------------------------------------------------
-
     @staticmethod
     def _reduce_false_positives(findings: list[Finding]) -> list[Finding]:
-        """Apply heuristics to suppress or consolidate known noisy rules.
-
-        Strategy:
-          1. For each noisy rule, count occurrences.
-          2. If a noisy rule fires >= threshold times and all hits are in
-             safe (internal/tool) paths, consolidate into a single INFO
-             advisory instead of N separate MEDIUM findings.
-          3. Individual hits in user-facing code are kept at original severity.
-        """
         # Partition: noisy vs clean
         noisy_buckets: dict[str, list[Finding]] = {}
         clean: list[Finding] = []

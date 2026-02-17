@@ -1,9 +1,3 @@
-"""Infrastructure-as-Code configuration scanner.
-
-Analyses Dockerfiles, Kubernetes YAML manifests, and Terraform files for
-security misconfigurations using Trivy's ``config`` scanner.
-"""
-
 from __future__ import annotations
 
 import json
@@ -24,8 +18,6 @@ logger = logging.getLogger(__name__)
 
 
 class IaCConfigScanner(ScannerPlugin):
-    """Scans IaC files for security misconfigurations."""
-
     name: ClassVar[str] = "iac-config"
     scan_modes: ClassVar[set[str]] = {ScanMode.SOURCE}
 
@@ -42,9 +34,6 @@ class IaCConfigScanner(ScannerPlugin):
     def execute(self, profile: TargetProfile) -> list[Finding]:
         assert profile.path is not None
         return self._run_trivy_config(profile)
-
-    # ------------------------------------------------------------------
-
     @staticmethod
     def _run_trivy_config(profile: TargetProfile) -> list[Finding]:
         assert profile.path is not None

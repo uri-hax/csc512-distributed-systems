@@ -1,19 +1,3 @@
-"""Memory forensics module -- the "break" component.
-
-Spins up a target image in a sandbox, snapshots its process memory,
-and scans the dump for cleartext secrets that are only present at runtime
-(decrypted API keys, passwords, connection strings that static analysis
-cannot see).
-
-Flow:
-  1. Start the image in an isolated Docker network.
-  2. Wait for the main process to initialise.
-  3. Dump process memory via ``/proc/<pid>/mem`` or ``gcore``.
-  4. Extract printable strings from the dump.
-  5. Regex-scan strings for high-entropy tokens and known secret formats.
-  6. Tear down the sandbox.
-"""
-
 from __future__ import annotations
 
 import logging
@@ -43,11 +27,7 @@ from security_toolkit.core.sandbox import (
 from security_toolkit.utils.docker_utils import docker_available
 
 logger = logging.getLogger(__name__)
-
-# ---------------------------------------------------------------------------
 # Secret patterns
-# ---------------------------------------------------------------------------
-
 _SECRET_PATTERNS: list[tuple[str, str, re.Pattern[str]]] = [
     ("MEM-SECRET-001", "AWS Access Key ID", re.compile(r"AKIA[0-9A-Z]{16}")),
     (
@@ -156,7 +136,6 @@ _SECRET_PATTERNS: list[tuple[str, str, re.Pattern[str]]] = [
 
 
 def _shannon_entropy(data: str) -> float:
-    """Calculate Shannon entropy of a string."""
     if not data:
         return 0.0
     freq: dict[str, int] = {}
@@ -164,16 +143,8 @@ def _shannon_entropy(data: str) -> float:
         freq[ch] = freq.get(ch, 0) + 1
     length = len(data)
     return -sum((count / length) * math.log2(count / length) for count in freq.values())
-
-
-# ---------------------------------------------------------------------------
 # Plugin
-# ---------------------------------------------------------------------------
-
-
 class MemoryForensicsScanner(ScannerPlugin):
-    """Spins up a container, dumps memory, scans for runtime secrets."""
-
     name: ClassVar[str] = "memory-forensics"
     scan_modes: ClassVar[set[str]] = {ScanMode.RUNTIME}
 
@@ -227,11 +198,7 @@ class MemoryForensicsScanner(ScannerPlugin):
                 stop_and_remove_container(container_name)
             if network:
                 remove_isolated_network(network)
-
-    # ------------------------------------------------------------------
-
     def _wait_for_container(self, container: str, timeout: int = 15) -> bool:
-        """Poll until the container is running, or timeout."""
         for _ in range(timeout):
             try:
                 result = subprocess.run(
@@ -251,19 +218,7 @@ class MemoryForensicsScanner(ScannerPlugin):
                 pass
             time.sleep(1)
         return False
-
-    # ------------------------------------------------------------------
-
     def _dump_and_scan(self, container: str, image: str) -> list[Finding]:
-        """Extract strings from container memory and scan for secrets.
-
-        Uses a three-tier additive approach (all tiers always run):
-          1. /proc/1/mem via docker exec (needs SYS_PTRACE)
-          2. env command via docker exec (readable by same user)
-          3. docker inspect for container env vars (host-side, always works)
-
-        Lines from all tiers are deduplicated before scanning.
-        """
         with tempfile.TemporaryDirectory(prefix="sectoolkit_mem_") as tmpdir:
             dump_path = Path(tmpdir) / "strings.txt"
             raw_strings = ""
@@ -382,7 +337,6 @@ class MemoryForensicsScanner(ScannerPlugin):
             return self._scan_strings(raw_strings, image)
 
     def _scan_strings(self, raw: str, source: str) -> list[Finding]:
-        """Apply secret patterns and entropy analysis to extracted strings."""
         findings: list[Finding] = []
         seen: set[str] = set()
 

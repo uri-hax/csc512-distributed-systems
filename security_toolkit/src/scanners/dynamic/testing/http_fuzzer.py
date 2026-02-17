@@ -1,12 +1,3 @@
-"""Dynamic Application Security Testing (DAST) plugin.
-
-If the target image exposes HTTP port(s):
-  1. Launches the service in an isolated Docker network.
-  2. Waits for a health-check response.
-  3. Runs Nuclei to scan for web vulnerabilities.
-  4. Tears down the sandbox.
-"""
-
 from __future__ import annotations
 
 import json
@@ -35,8 +26,6 @@ _WEB_PORTS = {80, 443, 8080, 8443, 3000, 5000, 8000, 9000}
 
 
 class DASTScanner(ScannerPlugin):
-    """Dynamic analysis of web services exposed by Docker images."""
-
     name: ClassVar[str] = "dast"
     scan_modes: ClassVar[set[str]] = {ScanMode.RUNTIME}
 
@@ -89,17 +78,12 @@ class DASTScanner(ScannerPlugin):
         finally:
             if container_name:
                 stop_and_remove_container(container_name)
-
-    # ------------------------------------------------------------------
     # Helpers
-    # ------------------------------------------------------------------
-
     @staticmethod
     def _start_service(
         image: str,
         exposed_ports: tuple[int, ...],
     ) -> tuple[str | None, int | None]:
-        """Start the image on the default bridge network with port publishing."""
         target_port = next(
             (p for p in exposed_ports if p in _WEB_PORTS),
             exposed_ports[0] if exposed_ports else None,
@@ -168,7 +152,6 @@ class DASTScanner(ScannerPlugin):
 
     @staticmethod
     def _wait_for_health(url: str, retries: int = 10, delay: int = 2) -> bool:
-        """Poll *url* until it returns a response."""
         import urllib.request
         import urllib.error
 
@@ -185,14 +168,9 @@ class DASTScanner(ScannerPlugin):
             except Exception:
                 time.sleep(delay)
         return False
-
-    # ------------------------------------------------------------------
     # Nuclei
-    # ------------------------------------------------------------------
-
     @staticmethod
     def _run_nuclei(base_url: str) -> list[Finding]:
-        """Run Nuclei with default community templates."""
         with tempfile.NamedTemporaryFile(
             mode="w", suffix=".json", delete=False, prefix="nuclei_"
         ) as f:

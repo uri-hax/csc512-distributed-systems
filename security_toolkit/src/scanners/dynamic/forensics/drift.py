@@ -1,14 +1,3 @@
-"""Drift detection -- check if the running binary differs from the image digest.
-
-Compares the image digest recorded at build time (from the registry / local
-store) with the actual digest of the running container's root filesystem.
-Drift is evidence of tampering or uncontrolled mutation.
-
-If no containers are currently running from the image, the plugin starts one
-temporarily, lets it initialise (generating .pyc files, logs, etc.), and then
-checks for drift.
-"""
-
 from __future__ import annotations
 
 import logging
@@ -31,8 +20,6 @@ logger = logging.getLogger(__name__)
 
 
 class DriftDetector(ScannerPlugin):
-    """Check for filesystem drift between an image and its running container."""
-
     name: ClassVar[str] = "drift-detector"
     scan_modes: ClassVar[set[str]] = {ScanMode.RUNTIME}
 
@@ -137,7 +124,6 @@ class DriftDetector(ScannerPlugin):
 
     @staticmethod
     def _start_temp_container(image: str) -> str | None:
-        """Start a temporary container for drift checking."""
         container_name = f"sectoolkit_drift_{uuid.uuid4().hex[:8]}"
         cmd = [
             "docker", "run", "-d",

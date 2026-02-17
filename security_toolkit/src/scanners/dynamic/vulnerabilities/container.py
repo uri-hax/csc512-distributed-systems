@@ -1,8 +1,3 @@
-"""Container / image vulnerability scanner for runtime mode.
-
-Uses Trivy to scan Docker images for OS-level and application-level CVEs.
-"""
-
 from __future__ import annotations
 
 import json
@@ -23,8 +18,6 @@ logger = logging.getLogger(__name__)
 
 
 class ContainerScanner(ScannerPlugin):
-    """Scan a Docker image for OS and library vulnerabilities."""
-
     name: ClassVar[str] = "container-scanner"
     scan_modes: ClassVar[set[str]] = {ScanMode.RUNTIME}
 
@@ -39,9 +32,6 @@ class ContainerScanner(ScannerPlugin):
     def execute(self, profile: TargetProfile) -> list[Finding]:
         assert profile.image is not None
         return self._run_trivy(profile.image)
-
-    # ------------------------------------------------------------------
-
     @staticmethod
     def _run_trivy(image: str) -> list[Finding]:
         cmd = [
