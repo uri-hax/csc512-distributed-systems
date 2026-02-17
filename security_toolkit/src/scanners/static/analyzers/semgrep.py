@@ -18,6 +18,7 @@ from security_toolkit.utils.process_utils import check_tool_available
 
 logger = logging.getLogger(__name__)
 # False-positive reduction
+# Consolidate noisy rules that fire frequently in safe internal code paths
 # Rules known to produce high false-positive rates in internal / tool code.
 # When triggered more than _FP_CONSOLIDATION_THRESHOLD times in a scan,
 # they are consolidated into a single INFO-level advisory.
@@ -25,7 +26,7 @@ _NOISY_RULES: set[str] = {
     "dynamic-urllib-use-detected",
 }
 
-# If a noisy rule fires this many times or more, consolidate into one finding.
+# Threshold: consolidate if noisy rule fires this many times or more
 _FP_CONSOLIDATION_THRESHOLD = 3
 
 # File-path patterns where urllib usage is expected (internal tooling,
@@ -70,12 +71,14 @@ class SemgrepScanner(ScannerPlugin):
     name: ClassVar[str] = "semgrep"
     scan_modes: ClassVar[set[str]] = {ScanMode.SOURCE}
 
+    # Check if this scanner can run for the given target
     def can_handle(self, profile: TargetProfile) -> bool:
         if not check_tool_available("semgrep"):
             logger.warning("semgrep not found on PATH -- skipping SAST")
             return False
         return profile.mode == ScanMode.SOURCE and profile.path is not None
 
+    # Run the scan and return findings
     def execute(self, profile: TargetProfile) -> list[Finding]:
         assert profile.path is not None
         rulesets = self._build_rulesets(profile)
@@ -145,6 +148,8 @@ class SemgrepScanner(ScannerPlugin):
     # False-positive reduction
     @staticmethod
     def _reduce_false_positives(findings: list[Finding]) -> list[Finding]:
+        # Strategy: partition findings into noisy vs clean, then consolidate noisy ones
+        # that fire frequently in safe paths into a single INFO advisory
         # Partition: noisy vs clean
         noisy_buckets: dict[str, list[Finding]] = {}
         clean: list[Finding] = []
@@ -159,11 +164,11 @@ class SemgrepScanner(ScannerPlugin):
         # Process each noisy bucket
         for rule_short, bucket in noisy_buckets.items():
             if len(bucket) < _FP_CONSOLIDATION_THRESHOLD:
-                # Below threshold -- keep as-is
+                # Below threshold: keep individual findings at original severity
                 clean.extend(bucket)
                 continue
 
-            # Check if all hits are in safe paths
+            # Separate safe (internal/tool) paths from user-facing code
             safe_hits: list[Finding] = []
             unsafe_hits: list[Finding] = []
             for f in bucket:

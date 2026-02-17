@@ -9,7 +9,8 @@ from urllib.parse import urlparse
 from security_toolkit.core.models import ScanMode, TargetProfile
 
 logger = logging.getLogger(__name__)
-# Language detection table
+
+# Language detection: match file names or extensions to identify languages in source tree
 # Mapping: language name -> set of file names or glob suffixes that indicate
 # the language is present.  We search the top two directory levels.
 
@@ -141,6 +142,7 @@ _LANGUAGE_INDICATORS: dict[str, set[str]] = {
     },
 }
 # Internal helpers
+# Limit depth to 3 to balance detection accuracy vs performance
 def _detect_languages(root: Path, max_depth: int = 3) -> frozenset[str]:
     detected: set[str] = set()
 
@@ -192,6 +194,7 @@ def _has_file(root: Path, names: set[str], max_depth: int = 3) -> bool:
 
 def _detect_exposed_ports(image: str) -> tuple[int, ...]:
     try:
+        # Use Go template to extract exposed ports from Docker image metadata
         result = subprocess.run(
             [
                 "docker",

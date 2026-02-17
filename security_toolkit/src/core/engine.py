@@ -12,7 +12,8 @@ from security_toolkit.core.models import ScanReport, TargetProfile
 from security_toolkit.core.plugin import ScannerPlugin, instantiate_plugins
 
 logger = logging.getLogger(__name__)
-# Scanner auto-discovery
+
+# Recursively import all scanner modules to trigger metaclass registration
 def _import_all_plugins() -> None:
     for importer, modname, ispkg in pkgutil.walk_packages(
         _scanners_pkg.__path__,
@@ -26,6 +27,7 @@ def _import_all_plugins() -> None:
 class ScanEngine:
     def __init__(self, *, max_workers: int = 4) -> None:
         self.max_workers = max_workers
+        # Trigger plugin registration by importing all scanner modules
         _import_all_plugins()
         self._plugins: list[ScannerPlugin] = instantiate_plugins()
         logger.info(
@@ -73,7 +75,7 @@ class ScanEngine:
 
         report = self._execute_parallel(applicable, profile, report)
 
-        # Merge the status tracking with execution results
+        # Merge skipped plugin status with execution results (preserve execution status over skipped)
         for plugin_name, status in all_plugins_status.items():
             if plugin_name not in report.plugin_execution:
                 report.plugin_execution[plugin_name] = status
@@ -101,6 +103,8 @@ class ScanEngine:
         profile: TargetProfile,
         report: ScanReport,
     ) -> ScanReport:
+        # Use ThreadPoolExecutor (not ProcessPoolExecutor) because plugins are I/O-bound,
+        # shelling out to external tools like semgrep, trivy, nuclei
         # Track plugin execution status
         plugin_status: dict[str, dict[str, object]] = {}
         for plugin in plugins:

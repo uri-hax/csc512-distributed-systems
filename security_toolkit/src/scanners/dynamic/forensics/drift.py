@@ -28,6 +28,7 @@ class DriftDetector(ScannerPlugin):
             return False
         return docker_available()
 
+    # Run the scan and return findings
     def execute(self, profile: TargetProfile) -> list[Finding]:
         assert profile.image is not None
         findings: list[Finding] = []
