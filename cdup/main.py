@@ -7,7 +7,7 @@ from rich.console import Console
 
 from data import read_files, preprocess_codebase
 from core import find_clones
-from visualization import display_clone_classes, display_file_visualization, display_summary
+from visualization import display_clone_classes, display_file_visualization, display_summary, collect_human_feedback
 from analysis import analyze_clones
 
 def main():
@@ -19,6 +19,8 @@ def main():
                         help="Treat all input files as a single codebase for cross-file clone detection.")
     parser.add_argument("--analyze", type=str, metavar="OUTPUT_CSV",
                         help="Run Exploratory Data Analysis (EDA) on clones and save to the specified CSV file.")
+    parser.add_argument("--human_feedback", action="store_true",
+                        help="Interactively classify each clone as NOISE, TRUE, or OTHER.")
     
     args = parser.parse_args()
     console = Console()
@@ -65,7 +67,15 @@ def main():
             
             current_analysis = []
             if args.analyze:
-                current_analysis = analyze_clones(sorted_classes, clone_type=1, codebase=codebase)
+                current_analysis = analyze_clones(sorted_classes, clone_type=1, codebase=codebase, files_data=files_data)
+                
+            if args.human_feedback:
+                feedback = collect_human_feedback(sorted_classes, codebase, files_data, mode="type1")
+                if args.analyze:
+                    for row in current_analysis:
+                        row['human_feedback'] = feedback.get(row['clone_id'], "")
+                        
+            if args.analyze:
                 analysis_rows.extend(current_analysis)
             
             # Phase 4 & 5: Visualization
@@ -84,8 +94,18 @@ def main():
                 single_codebase, single_normalized_t1, _ = preprocess_codebase([file_info])
                 sorted_classes = find_clones(single_normalized_t1)
                 
+                current_analysis = []
                 if args.analyze:
-                    analysis_rows.extend(analyze_clones(sorted_classes, clone_type=1, codebase=single_codebase))
+                    current_analysis = analyze_clones(sorted_classes, clone_type=1, codebase=single_codebase, files_data=[file_info])
+                
+                if args.human_feedback:
+                    feedback = collect_human_feedback(sorted_classes, single_codebase, [file_info], mode="type1")
+                    if args.analyze:
+                        for row in current_analysis:
+                            row['human_feedback'] = feedback.get(row['clone_id'], "")
+                
+                if args.analyze:
+                    analysis_rows.extend(current_analysis)
                 
                 for i, (content, occurrences) in enumerate(sorted_classes, 1):
                     _, length = next(iter(occurrences))
@@ -129,7 +149,15 @@ def main():
             
             current_analysis = []
             if args.analyze:
-                current_analysis = analyze_clones(sorted_classes, clone_type=2, codebase=codebase)
+                current_analysis = analyze_clones(sorted_classes, clone_type=2, codebase=codebase, files_data=files_data)
+                
+            if args.human_feedback:
+                feedback = collect_human_feedback(sorted_classes, codebase, files_data, mode="type2")
+                if args.analyze:
+                    for row in current_analysis:
+                        row['human_feedback'] = feedback.get(row['clone_id'], "")
+                        
+            if args.analyze:
                 analysis_rows.extend(current_analysis)
             
             # Phase 4 & 5: Visualization
@@ -147,8 +175,18 @@ def main():
                 single_codebase, _, single_normalized_t2 = preprocess_codebase([file_info])
                 sorted_classes = find_clones(single_normalized_t2)
                 
+                current_analysis = []
                 if args.analyze:
-                    analysis_rows.extend(analyze_clones(sorted_classes, clone_type=2, codebase=single_codebase))
+                    current_analysis = analyze_clones(sorted_classes, clone_type=2, codebase=single_codebase, files_data=[file_info])
+                
+                if args.human_feedback:
+                    feedback = collect_human_feedback(sorted_classes, single_codebase, [file_info], mode="type2")
+                    if args.analyze:
+                        for row in current_analysis:
+                            row['human_feedback'] = feedback.get(row['clone_id'], "")
+                
+                if args.analyze:
+                    analysis_rows.extend(current_analysis)
                 
                 for i, (content, occurrences) in enumerate(sorted_classes, 1):
                     _, length = next(iter(occurrences))
@@ -179,7 +217,10 @@ def main():
                 console.print(table)
 
     if args.analyze and analysis_rows:
-        fieldnames = ["clone_type", "clone_id", "generation", "occurrences", "line_length", "char_length", "entropy", "unique_words", "total_words", "ttr", "identifier_density", "cyclomatic_complexity", "cross_file_spread", "directory_spread", "locations"]
+        fieldnames = ["clone_type", "clone_id", "generation", "occurrences", "line_length", "char_length", "entropy", "unique_words", "total_words", "ttr", "identifier_density", "cyclomatic_complexity", "cross_file_spread", "directory_spread", "original_code", "type2_code", "locations"]
+        if args.human_feedback:
+            fieldnames.append("human_feedback")
+            
         with open(args.analyze, mode="w", newline="", encoding="utf-8") as f:
             writer = csv.DictWriter(f, fieldnames=fieldnames)
             writer.writeheader()
