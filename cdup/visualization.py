@@ -2,7 +2,67 @@ from rich.console import Console
 from rich.text import Text
 from rich.table import Table
 from rich.syntax import Syntax
+from rich.prompt import Prompt
 from analysis import calculate_generations
+
+def collect_human_feedback(sorted_classes, codebase, files_data, mode="type1"):
+    console = Console()
+    TAG_COLORS = ["cyan", "magenta", "yellow", "green", "red", "blue", "orange1", "spring_green1"]
+    
+    generations = calculate_generations(sorted_classes)
+    feedback_results = {}
+    
+    for i, (content, occurrences) in enumerate(sorted_classes, 1):
+        console.clear()
+        color = TAG_COLORS[(i - 1) % len(TAG_COLORS)]
+        gen = generations.get(i, 1)
+        header_text = Text(f"CLONE CLASS #{i} [GEN{gen}] ({len(occurrences)} occurrences):", style=f"bold {color}")
+        console.print(header_text)
+        
+        sorted_occ = sorted(list(occurrences))
+        for start, length in sorted_occ:
+            start_info = codebase[start]
+            end_info = codebase[start + length - 1]
+            start_fname = start_info['filename']
+            start_line = start_info['line_num']
+            end_line = end_info['line_num']
+            console.print(f"  - {start_fname}: Lines {start_line} to {end_line}")
+
+        console.print("\n[bold]Snippet Content (Original):[/bold]")
+        first_start, first_len = sorted_occ[0]
+        ref_info = codebase[first_start]
+        ref_end_info = codebase[first_start + first_len - 1]
+        ref_fname = ref_info['filename']
+        ref_start_line = ref_info['line_num']
+        ref_end_line = ref_end_info['line_num']
+        
+        ref_file_content = next((f['content'] for f in files_data if f['filename'] == ref_fname), "")
+        ref_raw_lines = ref_file_content.splitlines()
+        snippet_lines = ref_raw_lines[ref_start_line-1 : ref_end_line]
+        snippet_text = "\n".join(snippet_lines)
+        
+        syntax = Syntax(snippet_text, "c", theme="monokai", line_numbers=False)
+        console.print(syntax)
+        
+        if mode == "type2":
+            console.print("\n[bold]Parsed Structure (Type 2):[/bold]")
+            type2_lines = []
+            for idx in range(first_start, first_start + first_len):
+                type2_lines.append(codebase[idx].get('t2_norm', ''))
+            type2_text = "\n".join(type2_lines)
+            syntax_t2 = Syntax(type2_text, "c", theme="monokai", line_numbers=False)
+            console.print(syntax_t2)
+            
+        console.print("")
+        
+        choices = ["N", "T", "O"]
+        choice = Prompt.ask("Classify this clone: [N]oise, [T]rue, [O]ther", choices=choices, default="T").upper()
+        
+        val_map = {"N": "NOISE", "T": "TRUE", "O": "OTHER"}
+        feedback_results[i] = val_map[choice]
+        
+    console.clear()
+    return feedback_results
 
 def display_clone_classes(sorted_classes, codebase, files_data, mode="type1"):
     """
