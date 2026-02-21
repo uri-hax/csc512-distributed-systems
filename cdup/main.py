@@ -1,9 +1,14 @@
 import argparse
 import os
 import sys
+import time
+import csv
 from rich.console import Console
-from rich.table import Table
-from .detect_type_1 import find_clones_inverted_index_step_by_step
+
+from data import read_files, preprocess_codebase
+from core import find_clones
+from visualization import display_clone_classes, display_file_visualization, display_summary
+from analysis import analyze_clones
 
 def main():
     parser = argparse.ArgumentParser(description="CDUP: Simple Code Duplication Detector")
@@ -12,11 +17,16 @@ def main():
                         help="Types of clones to detect (e.g., --types 1 2). Default is 1.")
     parser.add_argument("--merge", action="store_true",
                         help="Treat all input files as a single codebase for cross-file clone detection.")
+    parser.add_argument("--analyze", type=str, metavar="OUTPUT_CSV",
+                        help="Run Exploratory Data Analysis (EDA) on clones and save to the specified CSV file.")
     
     args = parser.parse_args()
+    console = Console()
+    
+    analysis_rows = []
 
     if not os.path.exists(args.path):
-        print(f"Error: Path '{args.path}' does not exist.")
+        console.print(f"[red]Error: Path '{args.path}' does not exist.[/red]")
         sys.exit(1)
 
     # Collect C files
@@ -31,44 +41,53 @@ def main():
                     files.append(os.path.join(root, filename))
 
     if not files:
-        print("No C/H files found to scan.")
+        console.print("[yellow]No C/H files found to scan.[/yellow]")
         return
 
-    print(f"Scanning {len(files)} files for clones...\n")
+    console.print(f"Scanning {len(files)} files for clones...\n")
 
-    # Prepare file data
-    files_data = []
-    for filepath in files:
-        try:
-            with open(filepath, 'r') as f:
-                content = f.read()
-            files_data.append({
-                'filename': filepath,
-                'content': content
-            })
-        except Exception as e:
-            print(f"Error reading {filepath}: {e}")
+    # Phase 1: Read Files
+    files_data = read_files(files)
+    
+    # Phase 1: Preprocess (Type 1 & 2)
+    codebase, normalized_lines_t1, normalized_lines_t2 = preprocess_codebase(files_data)
 
     if 1 in args.types:
-        print("--- Running Type I Clone Detection ---")
+        console.print("--- Running Type I Clone Detection ---")
         
         if args.merge:
-            # Cross-file detection: pass all files at once
-            print("\nMode: Merged (Cross-File Detection)")
-            find_clones_inverted_index_step_by_step(files_data)
+            console.print("\n[bold]Mode: Merged (Cross-File Detection)[/bold]")
+            
+            start_time = time.perf_counter()
+            sorted_classes = find_clones(normalized_lines_t1)
+            end_time = time.perf_counter()
+            console.print(f"[dim]Detection took {end_time - start_time:.4f}s[/dim]\n")
+            
+            current_analysis = []
+            if args.analyze:
+                current_analysis = analyze_clones(sorted_classes, clone_type=1, codebase=codebase)
+                analysis_rows.extend(current_analysis)
+            
+            # Phase 4 & 5: Visualization
+            normalized_line_to_classes = display_clone_classes(sorted_classes, codebase, files_data, mode="type1")
+            display_file_visualization(files_data, normalized_line_to_classes, codebase)
+            display_summary(sorted_classes, current_analysis if args.analyze else None)
             
         else:
-            # Per-file detection: pass one file at a time
-            print("\nMode: Per-File Detection")
+            # Per-file detection: we need to slice the codebase and normalized_lines per file
+            console.print("\n[bold]Mode: Per-File Detection[/bold]")
             all_results = []
             
             for file_info in files_data:
-                print(f"\nAnalyzing File: {file_info['filename']}")
+                console.print(f"\nAnalyzing File: {file_info['filename']}")
                 
-                # Wrap single file in list to match signature
-                sorted_classes = find_clones_inverted_index_step_by_step([file_info])
+                single_codebase, single_normalized_t1, _ = preprocess_codebase([file_info])
+                sorted_classes = find_clones(single_normalized_t1)
                 
-                for i, (clone_content, occurrences) in enumerate(sorted_classes, 1):
+                if args.analyze:
+                    analysis_rows.extend(analyze_clones(sorted_classes, clone_type=1, codebase=single_codebase))
+                
+                for i, (content, occurrences) in enumerate(sorted_classes, 1):
                     _, length = next(iter(occurrences))
                     all_results.append({
                         "file": os.path.basename(file_info['filename']),
@@ -76,11 +95,11 @@ def main():
                         "occurrences": len(occurrences),
                         "length": length
                     })
-
+                    
             # Print Merged Summary Table for per-file mode
             if len(files) > 1 and all_results:
-                console = Console()
-                print("\n")
+                console.print("\n")
+                from rich.table import Table
                 table = Table(title="Merged Clone Summary (Per-File Results)", box=None)
                 table.add_column("File", style="bold white")
                 table.add_column("Clone #", justify="right", style="cyan")
@@ -96,6 +115,76 @@ def main():
                     )
                 
                 console.print(table)
+
+    if 2 in args.types:
+        console.print("\n--- Running Type II Clone Detection (Blind Renaming) ---")
+        
+        if args.merge:
+            console.print("\n[bold]Mode: Merged (Cross-File Detection)[/bold]")
+            
+            start_time = time.perf_counter()
+            sorted_classes = find_clones(normalized_lines_t2)
+            end_time = time.perf_counter()
+            console.print(f"[dim]Detection took {end_time - start_time:.4f}s[/dim]\n")
+            
+            current_analysis = []
+            if args.analyze:
+                current_analysis = analyze_clones(sorted_classes, clone_type=2, codebase=codebase)
+                analysis_rows.extend(current_analysis)
+            
+            # Phase 4 & 5: Visualization
+            normalized_line_to_classes = display_clone_classes(sorted_classes, codebase, files_data, mode="type2")
+            display_file_visualization(files_data, normalized_line_to_classes, codebase)
+            display_summary(sorted_classes, current_analysis if args.analyze else None)
+            
+        else:
+            console.print("\n[bold]Mode: Per-File Detection[/bold]")
+            all_results = []
+            
+            for file_info in files_data:
+                console.print(f"\nAnalyzing File: {file_info['filename']}")
+                
+                single_codebase, _, single_normalized_t2 = preprocess_codebase([file_info])
+                sorted_classes = find_clones(single_normalized_t2)
+                
+                if args.analyze:
+                    analysis_rows.extend(analyze_clones(sorted_classes, clone_type=2, codebase=single_codebase))
+                
+                for i, (content, occurrences) in enumerate(sorted_classes, 1):
+                    _, length = next(iter(occurrences))
+                    all_results.append({
+                        "file": os.path.basename(file_info['filename']),
+                        "clone_id": i,
+                        "occurrences": len(occurrences),
+                        "length": length
+                    })
+
+            if len(files) > 1 and all_results:
+                console.print("\n")
+                from rich.table import Table
+                table = Table(title="Merged Clone Summary (Type 2 Per-File Results)", box=None)
+                table.add_column("File", style="bold white")
+                table.add_column("Clone #", justify="right", style="cyan")
+                table.add_column("Occurrences", justify="center", style="magenta")
+                table.add_column("Sequence Length", justify="right", style="green")
+
+                for row in all_results:
+                    table.add_row(
+                        row["file"],
+                        f"#{row['clone_id']}",
+                        str(row["occurrences"]),
+                        str(row["length"])
+                    )
+                
+                console.print(table)
+
+    if args.analyze and analysis_rows:
+        fieldnames = ["clone_type", "clone_id", "generation", "occurrences", "line_length", "char_length", "entropy", "unique_words", "total_words", "ttr", "identifier_density", "cyclomatic_complexity", "cross_file_spread", "directory_spread", "locations"]
+        with open(args.analyze, mode="w", newline="", encoding="utf-8") as f:
+            writer = csv.DictWriter(f, fieldnames=fieldnames)
+            writer.writeheader()
+            writer.writerows(analysis_rows)
+        console.print(f"\n[bold green]Analysis saved to {args.analyze}[/bold green]")
 
 if __name__ == "__main__":
     main()
