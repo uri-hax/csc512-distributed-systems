@@ -1,0 +1,8 @@
+programs/lab2.sh
+programs/build.sh
+programs/linebreaker.c
+programs/readfile.c
+programs/test.txt
+fio/fio.h
+fio/fio.c
+ARGS: --run

@@ -1,0 +1,2 @@
+This thread's value is 2.
+The factorial of 2 is 2.

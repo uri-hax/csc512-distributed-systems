@@ -1,0 +1,2 @@
+This thread's value is 4.
+The factorial of 4 is 24.

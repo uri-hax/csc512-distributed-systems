@@ -1,0 +1,2 @@
+This thread's value is 1.
+The factorial of 1 is 1.

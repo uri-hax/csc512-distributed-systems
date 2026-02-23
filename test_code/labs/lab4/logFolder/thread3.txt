@@ -1,0 +1,2 @@
+This thread's value is 3.
+The factorial of 3 is 6.
