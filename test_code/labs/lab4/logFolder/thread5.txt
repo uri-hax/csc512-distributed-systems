@@ -1,0 +1,2 @@
+This thread's value is 5.
+The factorial of 5 is 120.

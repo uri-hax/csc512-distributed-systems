@@ -1,0 +1,5 @@
+Makefile
+main.cpp
+tests/miunit.h
+tests/test_log_files.c
+OUTPUT: main

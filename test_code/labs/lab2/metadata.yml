@@ -1,0 +1,12 @@
+---
+:id: 305843204
+:submitters:
+- :name: Sofia Mancini
+  :email: sofia.mancini@uri.edu
+:created_at: !ruby/object:ActiveSupport::TimeWithZone
+  utc: 2025-02-06 20:57:00.257440000 Z
+  zone: !ruby/object:ActiveSupport::TimeZone
+    name: America/Los_Angeles
+  time: 2025-02-06 12:57:00.257440000 Z
+:status: processed
+:score: 100.0

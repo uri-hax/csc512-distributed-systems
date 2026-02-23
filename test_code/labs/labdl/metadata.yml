@@ -1,0 +1,13 @@
+---
+:id: 313687174
+:submitters:
+- :name: Sofia Mancini
+  :email: sofia.mancini@uri.edu
+- :name: Gina Vincent
+  :email: gina_vincent79@uri.edu
+:created_at: !ruby/object:ActiveSupport::TimeWithZone
+  utc: 2025-03-02 20:56:59.553791000 Z
+  zone: !ruby/object:ActiveSupport::TimeZone
+    name: America/Los_Angeles
+  time: 2025-03-02 12:56:59.553791000 Z
+:status: processed
