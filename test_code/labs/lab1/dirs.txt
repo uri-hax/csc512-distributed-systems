@@ -1,0 +1,3 @@
+lab1.sh
+lab1.c
+ARGS: lab1.c 10 20 30 40 50

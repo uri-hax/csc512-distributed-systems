@@ -1,0 +1,1 @@
+You silly rabbit, this program accepts no arguments; running with 3 threads.
