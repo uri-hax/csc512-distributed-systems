@@ -36,44 +36,31 @@ def main():
         print("Warning: No clones classified as NOISE or TRUE found in the datasets.")
         return
 
-    # Convert generation to string (e.g. "G1", "G2") for better categorical plotting
-    df['Generation_Str'] = 'GEN' + df['generation'].astype(str)
-    
     # Set seaborn style
     sns.set_theme(style="whitegrid")
 
-    # 1. Generation Counts by Feedback
+    # 1. Sequence Length by Classification
     plt.figure(figsize=(10, 6))
-    ax = sns.countplot(data=df, x='Generation_Str', hue='human_feedback', order=sorted(df['Generation_Str'].unique()))
-    plt.title("Number of Clone Classes per Generation (TRUE vs NOISE)")
-    plt.xlabel("Generation")
-    plt.ylabel("Count")
-    plt.tight_layout()
-    plt.savefig(os.path.join(output_dir, "comparison_generation_counts.png"), dpi=300)
-    plt.close()
-
-    # 2. Sequence Length vs Generation
-    plt.figure(figsize=(10, 6))
-    sns.boxplot(data=df, x='Generation_Str', y='line_length', hue='human_feedback', order=sorted(df['Generation_Str'].unique()))
-    plt.title("Clone Sequence Length by Generation (TRUE vs NOISE)")
-    plt.xlabel("Generation")
+    sns.boxplot(data=df, x='human_feedback', y='line_length')
+    plt.title("Clone Sequence Length by Classification")
+    plt.xlabel("Classification")
     plt.ylabel("Line Length")
     plt.tight_layout()
-    plt.savefig(os.path.join(output_dir, "comparison_generation_length.png"), dpi=300)
+    plt.savefig(os.path.join(output_dir, "comparison_sequence_length.png"), dpi=300)
     plt.close()
 
-    # 3. Entropy vs Total Words
+    # 2. Entropy vs Total Words
     plt.figure(figsize=(10, 6))
-    sns.scatterplot(data=df, x='total_words', y='entropy', hue='human_feedback', style='Generation_Str', s=100, alpha=0.7)
+    sns.scatterplot(data=df, x='total_words', y='entropy', hue='human_feedback', s=100, alpha=0.7)
     plt.title("Information Entropy vs. Total Words (TRUE vs NOISE)")
     plt.xlabel("Total Words")
     plt.ylabel("Entropy")
-    plt.legend(bbox_to_anchor=(1.05, 1), loc='upper left')
+    plt.legend(title='Feedback')
     plt.tight_layout()
     plt.savefig(os.path.join(output_dir, "comparison_entropy_words.png"), dpi=300)
     plt.close()
 
-    # 4. Type-Token Ratio (TTR)
+    # 3. Type-Token Ratio (TTR)
     plt.figure(figsize=(10, 6))
     sns.boxplot(data=df, x='human_feedback', y='ttr')
     plt.title("Type-Token Ratio (TTR) by Classification")
@@ -82,7 +69,7 @@ def main():
     plt.savefig(os.path.join(output_dir, "comparison_ttr.png"), dpi=300)
     plt.close()
 
-    # 5. Identifier Density
+    # 4. Identifier Density
     plt.figure(figsize=(10, 6))
     sns.boxplot(data=df, x='human_feedback', y='identifier_density')
     plt.title("Identifier Density by Classification")
@@ -91,18 +78,18 @@ def main():
     plt.savefig(os.path.join(output_dir, "comparison_id_density.png"), dpi=300)
     plt.close()
 
-    # 6. Cyclomatic Complexity vs Total Words
+    # 5. Cyclomatic Complexity vs Total Words
     plt.figure(figsize=(10, 6))
-    sns.scatterplot(data=df, x='total_words', y='cyclomatic_complexity', hue='human_feedback', style='Generation_Str', s=100, alpha=0.7)
+    sns.scatterplot(data=df, x='total_words', y='cyclomatic_complexity', hue='human_feedback', s=100, alpha=0.7)
     plt.title("Cyclomatic Complexity vs. Total Words (TRUE vs NOISE)")
     plt.xlabel("Total Words")
     plt.ylabel("Cyclomatic Complexity Estimate")
-    plt.legend(bbox_to_anchor=(1.05, 1), loc='upper left')
+    plt.legend(title='Feedback')
     plt.tight_layout()
     plt.savefig(os.path.join(output_dir, "comparison_complexity_words.png"), dpi=300)
     plt.close()
 
-    # 7. Cross-File Spread
+    # 6. Cross-File Spread
     plt.figure(figsize=(10, 6))
     sns.countplot(data=df, x='cross_file_spread', hue='human_feedback')
     plt.title("Cross-File Spread of Clones (TRUE vs NOISE)")
@@ -112,7 +99,7 @@ def main():
     plt.savefig(os.path.join(output_dir, "comparison_file_spread.png"), dpi=300)
     plt.close()
 
-    # 8. Directory Spread
+    # 7. Directory Spread
     plt.figure(figsize=(10, 6))
     sns.countplot(data=df, x='directory_spread', hue='human_feedback')
     plt.title("Directory Spread of Clones (TRUE vs NOISE)")

@@ -217,7 +217,7 @@ def main():
                 console.print(table)
 
     if args.analyze and analysis_rows:
-        fieldnames = ["clone_type", "clone_id", "generation", "occurrences", "line_length", "char_length", "entropy", "unique_words", "total_words", "ttr", "identifier_density", "cyclomatic_complexity", "cross_file_spread", "directory_spread", "original_code", "type2_code", "locations"]
+        fieldnames = ["clone_type", "clone_id", "occurrences", "line_length", "char_length", "entropy", "unique_words", "total_words", "ttr", "identifier_density", "cyclomatic_complexity", "cross_file_spread", "directory_spread", "original_code", "type2_code", "locations"]
         if args.human_feedback:
             fieldnames.append("human_feedback")
             
