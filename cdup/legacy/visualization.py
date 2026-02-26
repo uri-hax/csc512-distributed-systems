@@ -3,20 +3,17 @@ from rich.text import Text
 from rich.table import Table
 from rich.syntax import Syntax
 from rich.prompt import Prompt
-from analysis import calculate_generations
 
 def collect_human_feedback(sorted_classes, codebase, files_data, mode="type1"):
     console = Console()
     TAG_COLORS = ["cyan", "magenta", "yellow", "green", "red", "blue", "orange1", "spring_green1"]
     
-    generations = calculate_generations(sorted_classes)
     feedback_results = {}
     
     for i, (content, occurrences) in enumerate(sorted_classes, 1):
         console.clear()
         color = TAG_COLORS[(i - 1) % len(TAG_COLORS)]
-        gen = generations.get(i, 1)
-        header_text = Text(f"CLONE CLASS #{i} [GEN{gen}] ({len(occurrences)} occurrences):", style=f"bold {color}")
+        header_text = Text(f"CLONE CLASS #{i} ({len(occurrences)} occurrences):", style=f"bold {color}")
         console.print(header_text)
         
         sorted_occ = sorted(list(occurrences))
@@ -78,12 +75,10 @@ def display_clone_classes(sorted_classes, codebase, files_data, mode="type1"):
     TAG_COLORS = ["cyan", "magenta", "yellow", "green", "red", "blue", "orange1", "spring_green1"]
     
     normalized_line_to_classes = {} # To return for file viz
-    generations = calculate_generations(sorted_classes)
     
     for i, (content, occurrences) in enumerate(sorted_classes, 1):
         color = TAG_COLORS[(i - 1) % len(TAG_COLORS)]
-        gen = generations.get(i, 1)
-        header_text = Text(f"CLONE CLASS #{i} [GEN{gen}] ({len(occurrences)} occurrences):", style=f"bold {color}")
+        header_text = Text(f"CLONE CLASS #{i} ({len(occurrences)} occurrences):", style=f"bold {color}")
         console.print(header_text)
         
         sorted_occ = sorted(list(occurrences))
@@ -191,7 +186,6 @@ def display_summary(sorted_classes, analysis_rows=None):
     console.print("\n")
     summary_table = Table(title="Clone Summary", box=None)
     summary_table.add_column("Clone #", justify="right", style="bold white")
-    summary_table.add_column("Gen", justify="center", style="white")
     summary_table.add_column("Occurrences", justify="center", style="magenta")
     summary_table.add_column("Lines", justify="right", style="green")
     
@@ -207,16 +201,13 @@ def display_summary(sorted_classes, analysis_rows=None):
 
     # Create a lookup for analysis data by clone_id
     analysis_map = {row['clone_id']: row for row in analysis_rows} if analysis_rows else {}
-    generations = calculate_generations(sorted_classes)
 
     for i, (content, occurrences) in enumerate(sorted_classes, 1):
         _, length = next(iter(occurrences))
         color = TAG_COLORS[(i - 1) % len(TAG_COLORS)]
-        gen = generations.get(i, 1)
         
         row_data = [
             Text(f"#{i}", style=f"bold {color}"),
-            f"G{gen}",
             str(len(occurrences)),
             str(length)
         ]
@@ -235,3 +226,4 @@ def display_summary(sorted_classes, analysis_rows=None):
         summary_table.add_row(*row_data)
         
     console.print(summary_table)
+    console.print(f"\n[bold green]Total Clone Classes Detected: {len(sorted_classes)}[/bold green]\n")
