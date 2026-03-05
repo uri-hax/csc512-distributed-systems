@@ -1,1 +1,1 @@
-# Testing scanners (DAST, load testing, resource monitoring)
+# Testing scanners (resource monitoring)

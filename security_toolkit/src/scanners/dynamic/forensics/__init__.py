@@ -1,1 +1,1 @@
-# Forensics scanners
+# Forensics scanners (memory analysis)

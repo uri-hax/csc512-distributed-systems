@@ -17,6 +17,8 @@ from security_toolkit.reporting.json_report import write_json_report
 from security_toolkit.reporting.markdown_report import write_markdown_report
 
 logger = logging.getLogger("security_toolkit")
+
+
 # Argument parser
 def _add_common_args(parser: argparse.ArgumentParser) -> None:
     parser.add_argument(
@@ -96,8 +98,7 @@ def _build_parser() -> argparse.ArgumentParser:
         default=None,
         help=(
             "URL of a running service (e.g. http://localhost:5000). "
-            "HTTP-based plugins (DAST, ZAP, load-tester, custom-detectors) "
-            "connect directly instead of starting a container. "
+            "HTTP-based plugins connect directly instead of starting a container. "
             "Can be combined with --image for Docker-specific plugins."
         ),
     )
@@ -132,6 +133,8 @@ def _build_parser() -> argparse.ArgumentParser:
     _add_common_args(full_parser)
 
     return parser
+
+
 # Logging setup
 def _configure_logging(verbosity: int) -> None:
     level = logging.WARNING
@@ -146,6 +149,8 @@ def _configure_logging(verbosity: int) -> None:
         datefmt="%H:%M:%S",
         stream=sys.stderr,
     )
+
+
 # Fail-on logic
 _FAIL_ON_MAP: dict[str, NormalizedSeverity] = {
     "critical": NormalizedSeverity.CRITICAL,
@@ -154,6 +159,8 @@ _FAIL_ON_MAP: dict[str, NormalizedSeverity] = {
     "low": NormalizedSeverity.LOW,
     "info": NormalizedSeverity.INFO,
 }
+
+
 # Main
 def main(argv: list[str] | None = None) -> None:
     parser = _build_parser()
@@ -173,9 +180,7 @@ def main(argv: list[str] | None = None) -> None:
                 parser.error(
                     "inspect requires at least one of --image, --pid, or --url"
                 )
-            profile = profile_target(
-                image=args.image, pid=args.pid, url=url
-            )
+            profile = profile_target(image=args.image, pid=args.pid, url=url)
             logger.info("Target profile: %s", profile)
             report = engine.run(profile)
 
@@ -193,9 +198,7 @@ def main(argv: list[str] | None = None) -> None:
             source_report = engine.run(source_profile)
 
             # Run RUNTIME mode (image + optional url, or url only)
-            runtime_profile = profile_target(
-                image=args.image, url=url
-            )
+            runtime_profile = profile_target(image=args.image, url=url)
             logger.info("Runtime profile: %s", runtime_profile)
             runtime_report = engine.run(runtime_profile)
 
@@ -237,7 +240,11 @@ def main(argv: list[str] | None = None) -> None:
 
         # Auto-add .json extension if missing, or use report.json if path is a directory
         if json_path.is_dir() or (not json_path.suffix):
-            json_path = json_path / "report.json" if json_path.is_dir() else json_path.with_suffix(".json")
+            json_path = (
+                json_path / "report.json"
+                if json_path.is_dir()
+                else json_path.with_suffix(".json")
+            )
 
         # MD path is same location, different extension
         md_path = json_path.parent / (json_path.stem + ".md")
