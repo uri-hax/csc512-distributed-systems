@@ -134,4 +134,4 @@ def main(seedIn):
 
     print('Thanks for playing!')
 
-# main(2)
+main(2)
