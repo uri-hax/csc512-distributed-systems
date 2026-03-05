@@ -57,12 +57,19 @@ No build step is required. The package runs as a Python module.
 **Requirements:** Python ≥ 3.10
 
 Optional dependencies (only needed for specific export features):
+
 - `networkx`, `matplotlib` — DAG PNG rendering (`visualize_dag`)
 - `pygraphviz` or `pydot` — hierarchical layout for DAG visualisation
 
 ```bash
-# Run as a package from its parent directory
-python -m cdup <subcommand> [options]
+# Run as a package from cdup/
+python -m src.main <subcommand> [options]
+```
+
+A good starting test command (called from cdup/) is:
+
+```bash
+python -m src.main detect --type 1 2 3 4 --src ./cross_lang_test_code --export-3d-html cross_lang_dag.html --output cross_lang.json
 ```
 
 ---
@@ -93,10 +100,10 @@ Phi nodes are injected at branch reconvergence points and loop entry points (SSA
 
 `dag.py` constructs a directed acyclic graph (with back-edges for loops) from the matrix. Edge kinds:
 
-| Kind | Meaning |
-|------|---------|
-| `data_flow` | Standard def-use dependency |
-| `phi_loop` | Back-edge into a loop-entry phi node |
+| Kind           | Meaning                                            |
+| -------------- | -------------------------------------------------- |
+| `data_flow`  | Standard def-use dependency                        |
+| `phi_loop`   | Back-edge into a loop-entry phi node               |
 | `phi_branch` | Branch-reconvergence phi merging two branch writes |
 
 Each function/root/struct scope receives a synthetic entry node that writes all parameter and constant slots, providing a traceable source for every downstream read.
@@ -121,16 +128,16 @@ Parse one or more C/Java source files into IR JSON.
 python -m cdup parse --src <file_or_dir> [options]
 ```
 
-| Flag | Default | Description |
-|------|---------|-------------|
-| `--src` | *(required)* | Path to a `.c`/`.java` file or directory. Directories are walked recursively. |
-| `--include-comments` | `false` | Include comment lines as statements in the IR. |
-| `--include-includes` | `false` | Include `#include` directives as statements. |
-| `--include-macros` | `false` | Include `#define` and other macro lines. |
-| `--output <file>` | stdout | Write the IR JSON to a file instead of stdout. |
-| `--export-matrix-csv [file]` | `matrix.csv` | Export the dependency matrix as a CSV file. |
-| `--export-dag-dot [file]` | `dag.dot` | Export the DAG as a Graphviz DOT file. |
-| `--export-3d-html [file]` | `dag_3d.html` | Export the DAG as an interactive 3-D HTML visualisation. |
+| Flag                           | Default         | Description                                                                       |
+| ------------------------------ | --------------- | --------------------------------------------------------------------------------- |
+| `--src`                      | *(required)*  | Path to a `.c`/`.java` file or directory. Directories are walked recursively. |
+| `--include-comments`         | `false`       | Include comment lines as statements in the IR.                                    |
+| `--include-includes`         | `false`       | Include `#include` directives as statements.                                    |
+| `--include-macros`           | `false`       | Include `#define` and other macro lines.                                        |
+| `--output <file>`            | stdout          | Write the IR JSON to a file instead of stdout.                                    |
+| `--export-matrix-csv [file]` | `matrix.csv`  | Export the dependency matrix as a CSV file.                                       |
+| `--export-dag-dot [file]`    | `dag.dot`     | Export the DAG as a Graphviz DOT file.                                            |
+| `--export-3d-html [file]`    | `dag_3d.html` | Export the DAG as an interactive 3-D HTML visualisation.                          |
 
 **Output format** — top-level keys:
 
@@ -153,21 +160,21 @@ Detect code clones from source files or a pre-parsed JSON file.
 python -m cdup detect --src <file_or_dir_or_json> [options]
 ```
 
-| Flag | Default | Description |
-|------|---------|-------------|
-| `--src` | *(required)* | Path to a `.c`/`.java` file, directory, or a `.json` file produced by `parse`. |
-| `--type 1 2 3 4` | `1` | One or more clone types to detect. Multiple values accepted (e.g. `--type 1 2`). |
-| `--min-length` | `2` | Minimum clone sequence length (in statements) to report. |
-| `--max-freq` | `0` (no limit) | Skip statements that appear more than this many times across all segments. Useful for filtering common boilerplate. |
-| `--maximal` / `--no-maximal` | `true` | Filter out clone classes fully subsumed by a longer clone class. |
-| `--filter-overlaps` / `--no-filter-overlaps` | `true` | Remove clone classes where all occurrences are in the same segment with overlapping ranges. |
-| `--similarity-threshold` | `0.7` | Minimum sequence similarity ratio for Type III detection (0.0–1.0). |
-| `--min-length-type3` | `3` | Minimum clone length for Type III detection. |
-| `--include-comments` | `false` | Include comments when parsing inline (ignored for pre-parsed JSON input). |
-| `--include-includes` | `false` | Include `#include` directives when parsing inline. |
-| `--include-macros` | `false` | Include macro statements when parsing inline. |
-| `--output <file>` | stdout | Write detection output to a file. |
-| `--export-3d-html [file]` | `clone_dag_3d.html` | Export an interactive 3-D DAG + clone visualisation. |
+| Flag                                             | Default               | Description                                                                                                         |
+| ------------------------------------------------ | --------------------- | ------------------------------------------------------------------------------------------------------------------- |
+| `--src`                                        | *(required)*        | Path to a `.c`/`.java` file, directory, or a `.json` file produced by `parse`.                              |
+| `--type 1 2 3 4`                               | `1`                 | One or more clone types to detect. Multiple values accepted (e.g.`--type 1 2`).                                   |
+| `--min-length`                                 | `2`                 | Minimum clone sequence length (in statements) to report.                                                            |
+| `--max-freq`                                   | `0` (no limit)      | Skip statements that appear more than this many times across all segments. Useful for filtering common boilerplate. |
+| `--maximal` / `--no-maximal`                 | `true`              | Filter out clone classes fully subsumed by a longer clone class.                                                    |
+| `--filter-overlaps` / `--no-filter-overlaps` | `true`              | Remove clone classes where all occurrences are in the same segment with overlapping ranges.                         |
+| `--similarity-threshold`                       | `0.7`               | Minimum sequence similarity ratio for Type III detection (0.0–1.0).                                                |
+| `--min-length-type3`                           | `3`                 | Minimum clone length for Type III detection.                                                                        |
+| `--include-comments`                           | `false`             | Include comments when parsing inline (ignored for pre-parsed JSON input).                                           |
+| `--include-includes`                           | `false`             | Include `#include` directives when parsing inline.                                                                |
+| `--include-macros`                             | `false`             | Include macro statements when parsing inline.                                                                       |
+| `--output <file>`                              | stdout                | Write detection output to a file.                                                                                   |
+| `--export-3d-html [file]`                      | `clone_dag_3d.html` | Export an interactive 3-D DAG + clone visualisation.                                                                |
 
 **Output format:**
 
@@ -211,12 +218,12 @@ Execute a named function from a pre-parsed IR JSON file using the tree-walking V
 python -m cdup run --src <parsed.json> [options]
 ```
 
-| Flag | Default | Description |
-|------|---------|-------------|
-| `--src` | *(required)* | Path to a `.json` file produced by `parse`. Raw source is not accepted. |
-| `--fn` | `main` | Name of the function to execute. |
-| `--args` | `[]` | Space-separated JSON values for the function's parameters (e.g. `'[1,2,3]' 3`). |
-| `--max-unroll` | `10000` | Maximum loop iterations before capping execution. |
+| Flag                | Default               | Description                                                                                                                   |
+| ------------------- | --------------------- | ----------------------------------------------------------------------------------------------------------------------------- |
+| `--src`           | *(required)*        | Path to a `.json` file produced by `parse`. Raw source is not accepted.                                                   |
+| `--fn`            | `main`              | Name of the function to execute.                                                                                              |
+| `--args`          | `[]`                | Space-separated JSON values for the function's parameters (e.g.`'[1,2,3]' 3`).                                              |
+| `--max-unroll`    | `10000`             | Maximum loop iterations before capping execution.                                                                             |
 | `--output [file]` | *(print to stdout)* | If provided, appends the execution trace to the parsed JSON and writes it out. If no path is given, writes back to `--src`. |
 
 **Output (stdout mode):** program `printf` output, one line per call.
@@ -241,12 +248,12 @@ python -m cdup run --src <parsed.json> [options]
 
 ## Clone Types
 
-| Type | Label | Algorithm | Description |
-|------|-------|-----------|-------------|
-| I | `"I"` | Inverted-index suffix scan | Exact match after whitespace normalisation. |
-| II | `"II"` | Inverted-index suffix scan | Structural match after identifier abstraction. User-defined identifiers are renamed to positional `VAR_N` tokens; C/Java keywords are preserved. |
-| III | `"III"` | Sliding-window `SequenceMatcher` | Near-miss clones. Pairs of segments whose statement sequences exceed `--similarity-threshold` after Type-II normalisation, and are not already covered by Types I/II/IV. |
-| IV | `"IV"` | Abstract structural fingerprint | Semantic/structural clones. Segments are fingerprinted by their abstract statement-kind sequence (e.g. `DECL·LOOP·ASSIGN·RETURN`); segments with identical fingerprints and the same length are reported as Type IV. |
+| Type | Label     | Algorithm                          | Description                                                                                                                                                                                                              |
+| ---- | --------- | ---------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| I    | `"I"`   | Inverted-index suffix scan         | Exact match after whitespace normalisation.                                                                                                                                                                              |
+| II   | `"II"`  | Inverted-index suffix scan         | Structural match after identifier abstraction. User-defined identifiers are renamed to positional `VAR_N` tokens; C/Java keywords are preserved.                                                                       |
+| III  | `"III"` | Sliding-window `SequenceMatcher` | Near-miss clones. Pairs of segments whose statement sequences exceed `--similarity-threshold` after Type-II normalisation, and are not already covered by Types I/II/IV.                                               |
+| IV   | `"IV"`  | Abstract structural fingerprint    | Semantic/structural clones. Segments are fingerprinted by their abstract statement-kind sequence (e.g.`DECL·LOOP·ASSIGN·RETURN`); segments with identical fingerprints and the same length are reported as Type IV. |
 
 The `--maximal` filter removes any clone class whose every occurrence is fully contained within a longer clone class of the same type. This reduces redundant reporting while preserving all structurally distinct clone groups.
 
@@ -308,6 +315,7 @@ The `--maximal` filter removes any clone class whose every occurrence is fully c
 Java source is handled by a two-stage pipeline:
 
 1. **Preprocessing** (`java_preprocess.py`) — transforms Java into near-C via a sequence of text passes. Key transformations:
+
    - Access modifiers (`public`, `private`, `static`, …) stripped
    - Java types mapped to C equivalents (`boolean→int`, `String→char*`, `Object→void*`)
    - Generics (`List<T>`) stripped to bare type names
@@ -315,7 +323,6 @@ Java source is handled by a two-stage pipeline:
    - `System.out.println` → `printf`, `Math.*` → C math equivalents
    - Enhanced-for (`for (T x : col)`) desugared to counted `for` loop
    - `this.field` → `field`
-
 2. **Parsing** (`java_parse.py`) — calls `parse_c_file` on the near-C output, then applies post-processing fixups: language tagging, struct→class reclassification, enhanced-for variable injection.
 
 Limitations: generics are stripped (type arguments lost), interface/abstract method bodies are treated as empty stubs, exception types in `catch` clauses are dropped.
@@ -324,18 +331,18 @@ Limitations: generics are stripped (type arguments lost), interface/abstract met
 
 ## Module Reference
 
-| Module | Responsibility |
-|--------|---------------|
-| `parse.py` | C brace scanner, segment tree, statement classifier, expression parser integration |
-| `expr.py` | Pratt parser for C expression strings → typed expression trees |
-| `matrix.py` | Slot × statement dependency matrix; phi-node injection |
-| `dag.py` | Data-flow DAG construction; SSA-style def-use edge building |
-| `detect.py` | Clone detection algorithms (Types I–IV) |
-| `kernel.py` | Expression tree evaluator (`VMKernel`) |
-| `vm.py` | Tree-walking interpreter (`VM`); pointer model; execution trace |
-| `models.py` | Core IR dataclasses (`Slot`, `Statement`, `Segment`) |
-| `java_preprocess.py` | Java → near-C text transformation pipeline |
-| `java_parse.py` | Java parse entry point; post-processing fixups |
-| `utils.py` | File collection, single-file parsing, multi-file JSON merging |
-| `cmds.py` | CLI subcommand implementations (`cmd_parse`, `cmd_detect`, `cmd_run`) |
-| `main.py` | Argument parser; entry point |
+| Module                 | Responsibility                                                                     |
+| ---------------------- | ---------------------------------------------------------------------------------- |
+| `parse.py`           | C brace scanner, segment tree, statement classifier, expression parser integration |
+| `expr.py`            | Pratt parser for C expression strings → typed expression trees                    |
+| `matrix.py`          | Slot × statement dependency matrix; phi-node injection                            |
+| `dag.py`             | Data-flow DAG construction; SSA-style def-use edge building                        |
+| `detect.py`          | Clone detection algorithms (Types I–IV)                                           |
+| `kernel.py`          | Expression tree evaluator (`VMKernel`)                                           |
+| `vm.py`              | Tree-walking interpreter (`VM`); pointer model; execution trace                  |
+| `models.py`          | Core IR dataclasses (`Slot`, `Statement`, `Segment`)                         |
+| `java_preprocess.py` | Java → near-C text transformation pipeline                                        |
+| `java_parse.py`      | Java parse entry point; post-processing fixups                                     |
+| `utils.py`           | File collection, single-file parsing, multi-file JSON merging                      |
+| `cmds.py`            | CLI subcommand implementations (`cmd_parse`, `cmd_detect`, `cmd_run`)        |
+| `main.py`            | Argument parser; entry point                                                       |
