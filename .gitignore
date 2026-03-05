@@ -61,3 +61,7 @@ dist/
 # Reports and outputs (scan results)
 **/reports/
 **/scan-reports/
+
+# Local educational / notes files (not for repo)
+DEEP_DIVE*.md
+NOTES*.md

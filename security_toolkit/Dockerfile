@@ -30,20 +30,6 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 RUN curl -sfL https://raw.githubusercontent.com/aquasecurity/trivy/main/contrib/install.sh \
     | sh -s -- -b /usr/local/bin
 
-# Nuclei (download pre-built binary -- avoids needing Go 1.24+)
-RUN NUCLEI_VERSION=$(curl -s https://api.github.com/repos/projectdiscovery/nuclei/releases/latest | grep '"tag_name"' | cut -d'"' -f4) \
-    && ARCH=$(dpkg --print-architecture) \
-    && case "${ARCH}" in \
-         amd64) NUCLEI_ARCH="linux_amd64" ;; \
-         arm64) NUCLEI_ARCH="linux_arm64" ;; \
-         *) echo "Unsupported arch: ${ARCH}" && exit 1 ;; \
-       esac \
-    && curl -sSL -o /tmp/nuclei.zip \
-       "https://github.com/projectdiscovery/nuclei/releases/download/${NUCLEI_VERSION}/nuclei_${NUCLEI_VERSION#v}_${NUCLEI_ARCH}.zip" \
-    && unzip /tmp/nuclei.zip -d /usr/local/bin/ \
-    && chmod +x /usr/local/bin/nuclei \
-    && rm /tmp/nuclei.zip
-
 # Grype (optional fallback scanner)
 RUN curl -sSfL https://raw.githubusercontent.com/anchore/grype/main/install.sh \
     | sh -s -- -b /usr/local/bin
@@ -103,7 +89,6 @@ RUN install -m 0755 -d /etc/apt/keyrings \
 
 # Copy pre-built scanner binaries from the tools stage
 COPY --from=tools /usr/local/bin/trivy    /usr/local/bin/trivy
-COPY --from=tools /usr/local/bin/nuclei   /usr/local/bin/nuclei
 COPY --from=tools /usr/local/bin/grype    /usr/local/bin/grype
 COPY --from=tools /usr/local/bin/gitleaks /usr/local/bin/gitleaks
 
@@ -138,7 +123,6 @@ RUN pip install --no-cache-dir .
 RUN security_toolkit --version \
     && semgrep --version \
     && trivy --version \
-    && nuclei -version \
     && grype version \
     && gitleaks version
 
