@@ -1,0 +1,68 @@
+# =============================================================================
+# docker-compose.yml -- Convenience wrappers for security_toolkit
+# =============================================================================
+#
+# Run from the security_toolkit/ directory:
+#   cd security_toolkit
+#
+# Source scan (mount a repo to analyse):
+#   SCAN_TARGET=/path/to/repo docker compose run --rm source-scan
+#
+# Runtime scan (needs Docker socket for image inspection):
+#   IMAGE=my-app:latest docker compose run --rm runtime-scan
+#
+# Custom scan with extra arguments:
+#   docker compose run --rm toolkit scan --target /workspace --output /workspace/report.json
+# =============================================================================
+
+services:
+  # -------------------------------------------------------------------------
+  # Generic entry point -- pass any CLI args
+  # -------------------------------------------------------------------------
+  toolkit:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    volumes:
+      - ${SCAN_TARGET:-.}:/workspace:ro
+    working_dir: /workspace
+
+  # -------------------------------------------------------------------------
+  # Source mode shortcut -- scans the mounted workspace
+  # -------------------------------------------------------------------------
+  source-scan:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    volumes:
+      - ${SCAN_TARGET:-.}:/workspace:ro
+      - ./reports:/reports
+    working_dir: /workspace
+    command:
+      - scan
+      - --target
+      - /workspace
+      - --output
+      - /reports/source-report.json
+      - --fail-on
+      - high
+
+  # -------------------------------------------------------------------------
+  # Runtime mode shortcut -- inspects a Docker image via the host daemon
+  # -------------------------------------------------------------------------
+  runtime-scan:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    user: root
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - ./reports:/reports
+    command:
+      - inspect
+      - --image
+      - ${IMAGE:-alpine:latest}
+      - --output
+      - /reports/runtime-report.json
+      - --fail-on
+      - high
