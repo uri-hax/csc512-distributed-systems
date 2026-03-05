@@ -56,7 +56,7 @@ def _render_rich(report: ScanReport) -> None:
     summary = Table(title="Severity Summary", show_header=True, header_style="bold")
     summary.add_column("Severity", style="bold", width=12)
     summary.add_column("Count", justify="right", width=8)
-    for sev in reversed(NormalizedSeverity):
+    for sev in reversed(list(NormalizedSeverity)):
         style = _SEVERITY_STYLE[sev]
         summary.add_row(
             f"[{style}]{_SEVERITY_LABEL[sev]}[/{style}]",
@@ -123,7 +123,7 @@ def _render_plain(report: ScanReport, stream: TextIO | None = None) -> None:
     out.write("=" * 60 + "\n\n")
 
     out.write("Severity Summary:\n")
-    for sev in reversed(NormalizedSeverity):
+    for sev in reversed(list(NormalizedSeverity)):
         out.write(f"  {_SEVERITY_LABEL[sev]:>10}: {counts.get(sev.name, 0)}\n")
     out.write(f"  {'TOTAL':>10}: {len(report.findings)}\n\n")
 

@@ -17,7 +17,8 @@ def docker_available() -> bool:
             timeout=10,
         )
         return result.returncode == 0
-    except FileNotFoundError:
+    except (FileNotFoundError, subprocess.TimeoutExpired, OSError) as exc:
+        logger.debug("Docker not available (%s): %s", type(exc).__name__, exc)
         return False
 
 

@@ -12,7 +12,14 @@ def pid_exists(pid: int) -> bool:
     try:
         os.kill(pid, 0)
         return True
-    except (OSError, ProcessLookupError):
+    except ProcessLookupError:
+        # No such process
+        return False
+    except PermissionError:
+        # Process exists, but we lack permission to signal it
+        return True
+    except OSError:
+        # Other OS-related errors are treated as "does not exist"
         return False
 
 
