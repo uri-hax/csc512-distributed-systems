@@ -10,6 +10,19 @@ def extract_comments(file_path):
     except Exception:
         return []
     
+    # Markdown handling
+    if p.suffix.lower() in {'.md', '.markdown'}:
+        text = src.strip()
+        if not text:
+            return []
+        
+        return [{
+            'text': text,
+            'line': 1,
+            'column': 0,
+            'type': 'markdown'
+        }]
+    
     tokens = LANG_TO_COMMENT_TOKENS.get(p.suffix.lower(), {'line': ['#', '//'], 'block': [('/*', '*/')]})
     line_tokens = tokens.get('line', [])
     block_tokens = tokens.get('block', [])

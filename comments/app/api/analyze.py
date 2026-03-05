@@ -3,16 +3,34 @@ import os
 
 from app.core.structs import LANG_TO_COMMENT_TOKENS
 from app.utils.extractor import extract_comments
-from app.utils.scoring import score_submission
+from app.utils.scoring import score_file
 
-exts = set(list(LANG_TO_COMMENT_TOKENS.keys()))
+exts = set(list(LANG_TO_COMMENT_TOKENS.keys())) | {'.md', '.markdown'}
 
 # Analyze an entire submission 
-def submission(target):
+def submission(target, ignored_dirs=None):
     total_files, total_lines, total_comments = 0, 0, 0
     result_files = []
-    
-    for root, _, files in os.walk(target):
+
+    ignored_dirs = ignored_dirs or []
+    ignored_set, ignored_abs = set(), set()
+    for d in ignored_dirs:
+        if os.path.isabs(d):
+            ignored_abs.add(os.path.abspath(d))
+        else:
+            ignored_set.add(d.strip('/'))
+
+    for root, dirs, files in os.walk(target, topdown=True):
+        pruned = []
+        for d in dirs:
+            full = os.path.abspath(os.path.join(root, d))
+            rel = os.path.relpath(full, start=target)
+            if d in ignored_set or rel in ignored_set or full in ignored_abs:
+                continue
+            pruned.append(d)
+
+        dirs[:] = pruned
+
         for f in files:
             _, ext = os.path.splitext(f)
             if ext.lower() in exts:
@@ -35,10 +53,7 @@ def submission(target):
         'files': result_files
     }
 
-    try:
-        return score_submission(data)
-    except Exception:
-        return {'submission': data }
+    return data
 
 # Analyze a single file
 def file(target):
@@ -62,5 +77,6 @@ def file(target):
         if t:
             comment_lines += t.count('\n') + 1
 
-    return {'path': target, 'lines': lines, 'comment_lines': comment_lines, 'comments': comments_list}
+    raw = {'path': target, 'lines': lines, 'comment_lines': comment_lines, 'comments': comments_list}
+    return score_file(raw)
 
