@@ -40,7 +40,7 @@ class ScanEngine:
     # Core run loop
     def run(self, profile: TargetProfile) -> ScanReport:
         report = ScanReport(
-            target=str(profile.path or profile.image or profile.pid),
+            target=str(profile.path or profile.image or profile.pid or profile.service_url),
             mode=profile.mode,
         )
 

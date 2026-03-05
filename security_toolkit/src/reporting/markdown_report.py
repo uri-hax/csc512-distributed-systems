@@ -63,7 +63,7 @@ def _render_markdown(report: ScanReport, *, include_raw: bool = False) -> str:
     lines.append("")
     lines.append("| Severity | Count |")
     lines.append("|----------|-------|")
-    for sev in reversed(NormalizedSeverity):
+    for sev in reversed(list(NormalizedSeverity)):
         count = counts.get(sev.name, 0)
         if count > 0:
             lines.append(f"| **{sev.name}** | {count} |")
