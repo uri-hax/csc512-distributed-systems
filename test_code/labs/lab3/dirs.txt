@@ -1,0 +1,5 @@
+Makefile
+tee.cpp
+test.txt
+OUTPUT: tee
+ARGS: test.txt output.txt

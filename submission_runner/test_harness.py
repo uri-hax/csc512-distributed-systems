@@ -5,20 +5,63 @@ from docker_runner import run_in_container
 from detect import detect_build_system
 
 HERE = Path(__file__).parent
-LAB_PATH = HERE.parent / "test_code" / "python_test" / "fibNR.py"
+LAB_PATH = HERE.parent / "test_code" / "long_runner.c"
 
 if LAB_PATH.is_file():
-    # Create temporary structure
+    # Handle single file submissions
     SUBMISSION_DIR = LAB_PATH.parent
     print(f"Testing single file: {LAB_PATH.name}")
     print(f"Path: {LAB_PATH}\n")
     
-    # For single Python files, just run them directly
-    returncode, out, err = run_in_container(
-        "python",
-        ["python3", LAB_PATH.name],
-        str(SUBMISSION_DIR)
-    )
+    # Detect language from file extension
+    ext = LAB_PATH.suffix.lower()
+    
+    if ext == '.py':
+        # Python: just run it
+        returncode, out, err = run_in_container(
+            "python",
+            ["python3", LAB_PATH.name],
+            str(SUBMISSION_DIR)
+        )
+    elif ext in ['.c', '.cpp']:
+        # C/C++: compile first, then run
+        language = "cpp" if ext == '.cpp' else "c"
+        compiler = "g++" if ext == '.cpp' else "gcc"
+        output_binary = LAB_PATH.stem
+        
+        # Compile
+        print(f"Compiling {LAB_PATH.name}...")
+        compile_returncode, compile_out, compile_err = run_in_container(
+            language,
+            [compiler, "-Wall", "-o", output_binary, LAB_PATH.name],
+            str(SUBMISSION_DIR)
+        )
+        
+        if compile_returncode != 0:
+            print("Compilation failed!")
+            print(f"Stdout: {compile_out}")
+            print(f"Stderr: {compile_err}")
+            exit(1)
+        
+        print("Compilation successful!\n")
+        
+        # Run
+        returncode, out, err = run_in_container(
+            language,
+            [f"./{output_binary}"],
+            str(SUBMISSION_DIR)
+        )
+        
+        # Cleanup
+        run_in_container(
+            language,
+            ["rm", "-f", output_binary],
+            str(SUBMISSION_DIR)
+        )
+    else:
+        print(f"Unsupported file type: {ext}")
+        exit(1)
+    
     print(f"Exit Code: {returncode}")
     if out:
         print(f"Program Output:\n{out}")

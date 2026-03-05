@@ -1,0 +1,2 @@
+This thread's value is 6.
+The factorial of 6 is 720.
