@@ -3,14 +3,15 @@ import os
 
 from app.core.structs import LANG_TO_COMMENT_TOKENS
 from app.utils.extractor import extract_comments
+from app.utils.reporting import submission_student_feedback
 from app.utils.scoring import score_file
 
 exts = set(list(LANG_TO_COMMENT_TOKENS.keys())) | {'.md', '.markdown'}
 
 # Analyze an entire submission 
 def submission(target, ignored_dirs=None):
-    total_files, total_lines, total_comments = 0, 0, 0
-    result_files = []
+    scored_files = []
+    raw_files = []
 
     ignored_dirs = ignored_dirs or []
     ignored_set, ignored_abs = set(), set()
@@ -36,21 +37,14 @@ def submission(target, ignored_dirs=None):
             if ext.lower() in exts:
                 path = os.path.join(root, f)
                 file_details = file(path)
+                scored_files.append(file_details)
+                raw_files.append({k: v for k, v in file_details.items() if k != 'tags'})
 
-                total_files += 1
-                total_lines += file_details.get('lines', 0)
-                total_comments += file_details.get('comment_lines', 0)
-
-                result_files.append(file_details)
-    
+    abs_target = os.path.abspath(target)
     data = {
-        'target': os.path.abspath(target),
-        'summary': {
-            'total_files': total_files,
-            'total_lines': total_lines,
-            'total_comment_lines': total_comments
-        },
-        'files': result_files
+        'target': abs_target,
+        'raw_files': raw_files,
+        'student_feedback': submission_student_feedback(abs_target, scored_files),
     }
 
     return data

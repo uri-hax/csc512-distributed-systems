@@ -12,7 +12,6 @@ def static_score_markdown(f: Dict[str, Any], text: str) -> Dict[str, Any]:
 	else:
 		tags.append("text_present")
 
-	f.pop("comments", None)
 	return f | {"tags": tags}
 
 def static_score_code(f: Dict[str, Any]) -> Dict[str, Any]:
@@ -32,10 +31,6 @@ def score_markdown(f: Dict[str, Any]) -> Dict[str, Any]:
 
 	if not text.strip():
 		return static_score_markdown(f, text)
-
-	f.pop("lines", None)
-	f.pop("comment_lines", None)
-	f.pop("comments", None)
 
 	llm_result = analyze_markdown(path, text)
 	if llm_result is not None:

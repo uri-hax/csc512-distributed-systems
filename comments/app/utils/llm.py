@@ -85,7 +85,7 @@ def analyze_markdown(file_path: str, text: str) -> Optional[Dict[str, Any]]:
                 {"role": "system", "content": SYSTEM_MARKDOWN_PROMPT},
                 {"role": "user", "content": user_prompt},
             ],
-            options={"temperature": 0.0, "num_predict": 128},
+            options={"temperature": 0.0, "num_predict": 320},
             keep_alive="10m",
         )
     except Exception:
@@ -94,7 +94,7 @@ def analyze_markdown(file_path: str, text: str) -> Optional[Dict[str, Any]]:
     raw_text = response.get("message", {}).get("content", "")
     parsed = parse_llm_json(raw_text)
 
-    if parsed is None or "tags" not in parsed:
+    if parsed is None:
         return None
 
     return parsed

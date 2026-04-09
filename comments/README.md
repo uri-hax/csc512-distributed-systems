@@ -70,8 +70,14 @@ curl -X POST http://localhost/score/file \
 **Output**
 - The submission response contains:
   - `target`: absolute path analyzed
-  - `summary`: `total_files`, `total_lines`, `total_comment_lines`
-  - `files`: list of file objects. Each file object includes `path`, `lines`, `comment_lines`, `comments`, and `tags` produced by the scorer.
+  - `raw_files`: list of file objects. Each file object includes `path`, `lines`, `comment_lines`, and `comments` produced by the scorer.
+  - `student_feedback`:
+    - `overview`: totals plus overall comment density
+    - `strengths`: consolidated positive findings
+    - `improvements`: consolidated improvement suggestions
+    - `alerts`: consolidated professionalism/wellbeing warnings
+    - `files`: per-file student-facing summaries
+    - `raw_text`: ready-to-deliver plain text report
 
 Example file tag values include: `all_meaningful`, `professional_language`, `good_coverage`, `todos_present`, `no_comments`, etc.
 

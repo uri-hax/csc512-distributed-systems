@@ -9,10 +9,10 @@ JSON_RE = re.compile(r"```(?:json)?\s*([\s\S]*?)```")
 SYSTEM_CODE_PROMPT = """\
 You are a code-comment quality analyzer for a computer-science course.
 You will receive a list of source-code comments extracted from a single file.
-Analyze them holistically and return ONLY valid JSON — no markdown fences,
-no commentary, no extra text.
+Analyze them holistically and return ONLY valid JSON containing valid tags— 
+no markdown fences, no commentary, no extra text.
 
-Evaluation guide — consider ALL of the following when choosing tags:
+Evaluation guide — consider ALL of the following:
   - Do comments explain *why* something is done, not just *what*?
   - Do they document design decisions, trade-offs, or assumptions?
   - Do they describe algorithm logic, complexity, or invariants?
@@ -26,6 +26,8 @@ Evaluation guide — consider ALL of the following when choosing tags:
   - Are all comments appropriate for an academic/professional setting?
   - Flag any profanity, slurs, insults, or inappropriate language.
   - Do any comments contain TODO, FIXME, HACK, XXX, TBD markers?
+  - Check for explicit warning-indicator language: direct mentions of self-harm, hopelessness, severe distress, burnout,
+    or inability to cope.
 
 Based on your analysis, return exactly ONE tag from each required
 category and any applicable optional tags.
@@ -48,6 +50,9 @@ category and any applicable optional tags.
 
   OPTIONAL — include only when applicable:
     todos_present — at least one comment contains a TODO/FIXME/HACK/XXX/TBD
+    warning_hopelessness_language — explicit hopelessness/despair wording
+    warning_severe_distress_language — explicit crisis/panic/cannot cope wording
+    warning_burnout_language     — explicit burnout/exhaustion/overload wording
 
 Return exactly this JSON structure:
 {
@@ -59,10 +64,10 @@ SYSTEM_MARKDOWN_PROMPT = """\
 You are a documentation quality analyzer for a computer-science course.
 You will receive the full text of a markdown document that accompanies a
 student's code submission (e.g. a design document, reflection, or README).
-Analyze it holistically and return ONLY valid JSON — no markdown fences,
-no commentary, no extra text.
+Analyze them holistically and return ONLY valid JSON containing valid tags— 
+no markdown fences, no commentary, no extra text.
 
-Evaluation guide — consider ALL of the following when choosing tags:
+Evaluation guide — consider ALL of the following:
   - Do NOT assume content exists beyond what is written.
   - Does the document demonstrate genuine understanding of the project?
   - Does it explain design decisions, architecture, or trade-offs?
@@ -78,6 +83,8 @@ Evaluation guide — consider ALL of the following when choosing tags:
   - Is the language appropriate for an academic setting?
   - Flag any profanity, slurs, insults, or inappropriate language.
   - If sections exist but are empty or contain placeholder text (e.g., TODO, TBD, "coming soon", "fill this in later"), treat them as minimal content.
+  - Check for explicit warning-indicator language: direct mentions of self-harm, hopelessness, severe distress, burnout,
+    or inability to cope.
 
 Based on your analysis, return exactly ONE tag from each required category
 and any applicable optional tags.
@@ -101,6 +108,9 @@ and any applicable optional tags.
     references_code    — document references specific code or implementation
     includes_diagrams  — document includes diagrams, tables, or visual aids
     todos_present      — document contains TODO/FIXME/TBD placeholders
+    warning_hopelessness_language — explicit hopelessness/despair wording
+    warning_severe_distress_language — explicit crisis/panic/cannot cope wording
+    warning_burnout_language     — explicit burnout/exhaustion/overload wording
 
 Return exactly this JSON structure:
 {

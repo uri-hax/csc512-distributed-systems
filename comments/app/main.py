@@ -4,6 +4,8 @@ from fastapi import FastAPI, HTTPException
 from app.core.structs import AnalyzeRequest, FileRequest
 from app.api.analyze import submission, file
 from app.api.status import system_status
+from app.utils.reporting import file_student_feedback
+
 
 app = FastAPI(title="Comment Analysis Service", version="0.1")
 
@@ -42,12 +44,16 @@ def analyze_single_file(req: FileRequest):
         if not submissions_root:
             raise HTTPException(status_code=500, detail="SUBMISSIONS_ROOT not configured")
 
-        target = os.path.join(submissions_root, req.submission_id, req.file)
+        submission_root = os.path.join(submissions_root, req.submission_id)
+        target = os.path.join(submission_root, req.file)
     else:
+        submission_root = None
         target = req.file
 
     try:
-        result = file(target)
+        scored = file(target)
+        result = {k: v for k, v in scored.items() if k != 'tags'}
+        result['student_feedback'] = file_student_feedback(scored, target=submission_root)
         return result
     except ValueError as ve:
         msg = str(ve)

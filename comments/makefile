@@ -4,7 +4,7 @@ DEVELOPMENT_PORT=8080
 HOST_SUBMISSIONS_ROOT=/path/to/submissions
 CONTAINER_SUBMISSIONS_ROOT=/student
 
-LLM_MODEL=granite3.1-dense:2b
+LLM_MODEL=phi4-mini:3.8b
 
 dev-serve: build
 	@echo "Starting comments_service_dev container (press Ctrl-C to stop)..."
