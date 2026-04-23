@@ -102,7 +102,7 @@ For your final individual research paper, please only write:
 * Systems/Methods
 * Results
 
-Email your Overleaf LaTeX documents to Shaun by May 7th, at 11:59 PM. If you need some extra time, please contact Shaun.
+Email your Overleaf LaTeX documents to Shaun by May 10th, at 11:59 PM. If you need some extra time, please contact Shaun.
 
 Grading (100 points):
 * Introduction (30)
@@ -110,6 +110,7 @@ Grading (100 points):
 * Results (30)
 
 If you submit the final paper by Wednesday, April 29th, at 11:59 PM, **you will get 10 extra credit points.**
+If you submit the final paper by Thursday, May 7th, at 11:59 PM, **you will get 5 extra credit points.**
 
 ### Final Letter Grade Distribution
 Final letter grades are calculated using the ranges below. These numerical values might be lowered but will not be raised. Your final letter grade will be the letter corresponding to the highest cutoff value less than or equal to the final grade. For example, a final grade of 92.99 is an A- and not an A. 
