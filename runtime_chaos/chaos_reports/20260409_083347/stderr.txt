@@ -1,0 +1,24 @@
+=== none ===
+INFO: index shutdown — freed 150000 log entries
+
+=== cpu_half ===
+INFO: index shutdown — freed 150000 log entries
+
+=== cpu_tenth ===
+INFO: index shutdown — freed 150000 log entries
+
+=== memory_squeeze ===
+INFO: index shutdown — freed 150000 log entries
+
+=== memory_bomb ===
+INFO: index shutdown — freed 150000 log entries
+
+=== memory_ceiling ===
+INFO: index shutdown — freed 150000 log entries
+
+=== network_degrade ===
+INFO: index shutdown — freed 150000 log entries
+
+=== network_flap ===
+INFO: index shutdown — freed 150000 log entries
+

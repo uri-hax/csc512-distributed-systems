@@ -1,28 +1,16 @@
-# Mirrored after docker_runner.py but reworked for Chaos
-# Key difference from run_in_container():
-#   - Accepts a chaos profile name
-#   - Starts a background thread that calls `docker update` and `docker exec tc (traffic control)`
-#     at scheduled times while the container runs
-#   - Returns a ChaosRunResult instead of a bare (returncode, stdout, stderr) tuple
-
+from pathlib import Path
+import os
 import subprocess
 import threading
 import time
 import uuid
+import re
+import sys
 from dataclasses import dataclass, field
 
 from chaos_config import ChaosProfile, ResourceSnapshot, get_profile
+from submission_runner.docker_runner import DOCKER_IMAGES
 
-DOCKER_IMAGES = {
-    "python": "submission-runner-python",
-    "c":      "submission-runner-c",
-    "cpp":    "submission-runner-cpp",
-}
-
-
-# ═══════════════════════════════════════════════════════════════════════════════
-# Result
-# ═══════════════════════════════════════════════════════════════════════════════
 
 @dataclass
 class ChaosEvent:
@@ -45,17 +33,35 @@ class ChaosRunResult:
     oom_killed: bool = False
     timed_out: bool = False
     wall_time_s: float = 0.0
+    log_dir: str | None = None
+    peak_rss_mb:  float = 0.0
+    cpu_peak_pct: float = 0.0
+    cpu_avg_pct:  float = 0.0
+    pids_peak:    int   = 0
 
-    # ── Compatibility shim ────────────────────────────────────────────────────
     def as_tuple(self):
         """Return (returncode, stdout, stderr) to match run_in_container() callers."""
         return self.returncode, self.stdout, self.stderr
 
+    def print_student_report(self):
+        from report_format import parse_metrics, generate_feedback
+        metrics = parse_metrics(self.stdout)
+        feedback = generate_feedback(metrics, self)
+
+        if self.log_dir:
+            print("\n════════ STUDENT SUMMARY ════════")
+            for line in feedback:
+                print(line)
+            print("\n Key Metrics:")
+            print(f"CPU avg ops/sec: {metrics['cpu_avg']:.0f}")
+            print(f"CPU min ops/sec: {metrics['cpu_min']:.0f}")
+            print(f"Memory peak: {metrics['mem_peak']} MB")
+            print("\n Full logs available in saved report folder")
+
     def print_report(self):
-        """Pretty-print the full chaos run report."""
         bar = "═" * 56
         print(f"\n{bar}")
-        print(f"  CHAOS RUN REPORT — profile: {self.profile_name!r}")
+        print(f"  CHAOS RUN REPORT profile: {self.profile_name!r}")
         print(bar)
         print(f"  Exit code  : {self.returncode}")
         print(f"  Wall time  : {self.wall_time_s:.2f}s")
@@ -64,6 +70,8 @@ class ChaosRunResult:
         print(f"\n  Timeline:")
         for e in self.events:
             print(f"    {e}")
+        if self.log_dir:
+            print(f"\n Raw logs saved to: {self.log_dir}")
         if self.stdout:
             print(f"\n  stdout (last 2000 chars):\n{self.stdout[-2000:]}")
         if self.stderr:
@@ -82,32 +90,10 @@ def run_in_container_with_chaos(
     profile_name: str = "none",
     timeout: int = 30,
 ) -> ChaosRunResult:
-    """
-    Chaos-aware replacement for run_in_container().
-
-    Args:
-        language:       "python", "c", or "cpp"  (same as run_in_container)
-        command:        Command list              (same as run_in_container)
-        submission_dir: Host path to submission   (same as run_in_container)
-        profile_name:   Chaos profile to apply   (new)
-        timeout:        Max seconds              (same as run_in_container)
-
-    Returns:
-        ChaosRunResult — call .as_tuple() if you need the old (rc, out, err) shape.
-
-    Example:
-        result = run_in_container_with_chaos(
-            "c", ["./long_runner"], "/path/to/submission",
-            profile_name="cpu_gradual", timeout=90
-        )
-        result.print_report()
-        rc, out, err = result.as_tuple()
-    """
     image = DOCKER_IMAGES.get(language)
     if not image:
         raise ValueError(f"Unsupported language: {language!r}. "
                          f"Known: {list(DOCKER_IMAGES)}")
-
     profile = get_profile(profile_name)
     return _run(image, command, submission_dir, profile, timeout)
 
@@ -123,7 +109,6 @@ def _run(
     profile: ChaosProfile,
     timeout: int,
 ) -> ChaosRunResult:
-    import os
     submission_dir = os.path.abspath(submission_dir)
 
     events: list[ChaosEvent] = []
@@ -141,22 +126,18 @@ def _run(
         "-v",        f"{submission_dir}:/submission",
         "-w",        "/submission",
         "--user",    "1000:1000",
-        "--pids-limit", "64",                 # block fork bombs
+        "--pids-limit", "64",
         "--security-opt", "no-new-privileges",
     ]
 
-    # Network: profiles with net chaos need a real network namespace + NET_ADMIN.
-    # Everything else keeps your existing "--network none".
     if profile.needs_net_admin:
         docker_cmd += ["--network", "bridge", "--cap-add", "NET_ADMIN"]
         log("Network chaos enabled — container has bridge network + NET_ADMIN")
     else:
         docker_cmd += ["--network", "none"]
 
-    # Apply initial resource constraints from the profile
     docker_cmd += profile.initial.to_run_flags()
 
-    # If the profile sets no initial limits, fall back to your existing defaults
     if profile.initial.cpu_quota is None:
         docker_cmd += ["--cpus", "1.0"]
     if profile.initial.memory_mb is None:
@@ -168,11 +149,13 @@ def _run(
     log(f"Profile  : {profile.name} — {profile.description}")
     log(f"Command  : {' '.join(command)}")
 
-    # ── Start background chaos injection thread ───────────────────────────────
+    # ── Shared stats dict populated by _chaos_worker ────────────────────────
+    docker_stats: dict = {}
+
     stop_event = threading.Event()
     chaos_thread = threading.Thread(
         target=_chaos_worker,
-        args=(container_name, profile, start, events, stop_event),
+        args=(container_name, profile, start, events, stop_event, docker_stats),
         daemon=True,
     )
 
@@ -198,10 +181,11 @@ def _run(
             log("OOM killed (exit 137)", "warn")
         elif returncode != 0:
             log(f"Non-zero exit: {returncode}", "warn")
+        print(f"DEBUG returncode={returncode}", file=sys.stderr)
 
     except subprocess.TimeoutExpired:
         timed_out = True
-        log(f"Timeout after {timeout}s — killing container", "warn")
+        log(f"Timeout after {timeout}s: killing container", "warn")
         subprocess.run(["docker", "kill", container_name],
                        capture_output=True, timeout=5)
         returncode = -1
@@ -216,16 +200,24 @@ def _run(
 
     finally:
         stop_event.set()
+        chaos_thread.join(timeout=6)   # wait for stats to flush into docker_stats
+
+    events_clean = [e for e in events
+                    if not (e.elapsed_s == -1 and e.level == "stats")]
 
     return ChaosRunResult(
         returncode   = returncode,
         stdout       = stdout,
         stderr       = stderr,
         profile_name = profile.name,
-        events       = events,
+        events       = events_clean,
         oom_killed   = oom_killed,
         timed_out    = timed_out,
         wall_time_s  = round(time.monotonic() - start, 2),
+        peak_rss_mb  = round(docker_stats.get("peak_rss_mb", 0.0), 1),
+        cpu_peak_pct = round(docker_stats.get("cpu_peak", 0.0), 1),
+        cpu_avg_pct  = round(docker_stats.get("cpu_avg", 0.0), 1),
+        pids_peak    = docker_stats.get("pids_peak", 0),
     )
 
 
@@ -239,46 +231,115 @@ def _chaos_worker(
     start: float,
     events: list[ChaosEvent],
     stop: threading.Event,
+    docker_stats: dict,           # shared dict written here, read by _run()
 ):
-    """
-    Runs in a daemon thread alongside the container.
-    Wakes up at each DynamicStep's scheduled time and applies the new constraints.
-    """
-    def log(msg: str, level: str = "info"):
+    def log(msg, level="info"):
         events.append(ChaosEvent(round(time.monotonic() - start, 2), msg, level))
 
-    # Apply initial network rules once the container is up (~1-2s after launch)
+    # ── Stats — written by poll_stats, flushed into docker_stats on exit ──────
+    stats = {
+        "peak_rss_mb":  0.0,
+        "cpu_peak":     0.0,
+        "cpu_samples":  [],
+        "mem_samples":  [],
+        "pids_peak":    0,
+        "pids_samples": [],
+    }
+
+    def poll_stats():
+        time.sleep(0.5)
+        while not stop.is_set():
+            try:
+                r = subprocess.run(
+                    ["docker", "stats", "--no-stream", "--format",
+                     "{{.CPUPerc}}\t{{.MemUsage}}\t{{.PIDs}}",
+                     container_name],
+                    capture_output=True, text=True, timeout=3,
+                )
+
+                if r.returncode == 0 and r.stdout.strip():
+                    parts = r.stdout.strip().split("\t")
+                    if len(parts) == 3:
+                        cpu_str, mem_str, pids_str = parts
+
+                        m = re.search(r"([\d.]+)%", cpu_str)
+                        if m:
+                            sample = float(m.group(1))
+                            stats["cpu_samples"].append(sample)
+                            stats["cpu_peak"] = max(stats["cpu_peak"], sample)
+
+                        m = re.match(r"([\d.]+)([KMG])iB", mem_str.strip())
+                        if m:
+                            val, unit = float(m.group(1)), m.group(2)
+                            mb = (val if unit == "M" else
+                                val / 1024 if unit == "K" else val * 1024)
+                        elif mem_str.strip() == "0B / 0B":
+                            mb = 0.0
+                        else:
+                            mb = None
+
+                        if mb is not None and mb > 0:
+                            stats["mem_samples"].append(mb)
+                            stats["peak_rss_mb"] = max(stats["peak_rss_mb"], mb)
+
+                        try:
+                            pid_count = int(pids_str.strip())
+                            stats["pids_samples"].append(pid_count)
+                            stats["pids_peak"] = max(stats["pids_peak"], pid_count)
+                        except ValueError:
+                            pass
+
+            except Exception:
+                pass
+            stop.wait(timeout=0.5)
+
+    # ── Start stats polling thread ────────────────────────────────────────────
+    stats_thread = threading.Thread(target=poll_stats, daemon=True)
+    stats_thread.start()
+
+    # ── Initial network rules ─────────────────────────────────────────────────
     if profile.initial.has_net_chaos():
-        if not stop.wait(timeout=2.5):   # wait for container init
+        if not stop.wait(timeout=2.5):
             _apply_net(container_name, profile.initial, log)
 
-    # Walk through dynamic steps in time order
+    # ── Dynamic steps ─────────────────────────────────────────────────────────
     for step in sorted(profile.steps, key=lambda s: s.delay_s):
-        # Sleep until this step is due
         remaining = step.delay_s - (time.monotonic() - start)
         if remaining > 0:
             if stop.wait(timeout=remaining):
-                return  # container finished early
+                break
         if stop.is_set():
-            return
+            break
 
         label = step.label or f"step@{step.delay_s}s"
         log(f"Applying: {label}")
-
-        # 1. CPU / memory / blkio via docker update
         _apply_update(container_name, step.snapshot, log)
-
-        # 2. Network via tc inside container
         if profile.needs_net_admin:
             _apply_net(container_name, step.snapshot, log)
 
+    # ── Flush stats into shared dict ──────────────────────────────────────────
+    stop.wait()
+
+    stats["cpu_avg"] = (sum(stats["cpu_samples"]) / len(stats["cpu_samples"])
+                        if stats["cpu_samples"] else 0.0)
+    stats["mem_avg"] = (sum(stats["mem_samples"]) / len(stats["mem_samples"])
+                        if stats["mem_samples"] else 0.0)
+    del stats["cpu_samples"]
+    del stats["mem_samples"]
+    del stats["pids_samples"]
+
+    docker_stats.update(stats)   # write into the shared dict _run() holds
+
+
+# ═══════════════════════════════════════════════════════════════════════════════
+# Helpers
+# ═══════════════════════════════════════════════════════════════════════════════
 
 def _apply_update(
     container_name: str,
     snap: ResourceSnapshot,
     log,
 ):
-    """Call `docker update` to change CPU/memory/blkio on the running container."""
     flags = snap.to_update_flags()
     if not flags:
         return
@@ -300,6 +361,5 @@ def _apply_net(
     for tc_cmd in snap.to_tc_commands():
         full = ["docker", "exec", container_name] + tc_cmd
         r = subprocess.run(full, capture_output=True, text=True, timeout=5)
-        # tc del on a clean interface returns an error — suppress it
         if r.returncode != 0 and "RTNETLINK" not in r.stderr:
             log(f"tc warn: {r.stderr.strip()}", "warn")

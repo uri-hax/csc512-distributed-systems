@@ -1,0 +1,29 @@
+========================================================
+  CHAOS TESTING REPORT
+========================================================
+
+  Baseline (no constraints):
+    Wall time : 1.2s
+    Memory    : 0.0 MB
+    CPU usage : 0.0% avg
+    Exit code : 0
+
+  All other profiles are compared against this baseline.
+
+========================================================
+  RESULTS BY PROFILE
+========================================================
+
+========================================================
+  OVERALL VERDICT
+========================================================
+
+  Profiles tested  : 0
+  Passing          : 0
+  Warnings         : 0
+  Failing          : 0
+
+ SUCCESS: Your program passed all chaos profiles.
+    It handles resource constraints gracefully.
+
+========================================================

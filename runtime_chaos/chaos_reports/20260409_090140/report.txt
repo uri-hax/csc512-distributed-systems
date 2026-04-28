@@ -1,0 +1,117 @@
+========================================================
+  CHAOS TESTING REPORT
+========================================================
+
+  Baseline (no constraints):
+    Wall time : 22.9s
+    Memory    : 137.2 MB
+    CPU usage : 101.6% avg
+    Exit code : 0
+
+  All other profiles are compared against this baseline.
+
+========================================================
+  RESULTS BY PROFILE
+========================================================
+
+  CPU_HALF  [WARN]
+    Wall time : 40.9s  (+79% vs baseline)
+    Exit code : 0
+    Memory    : 137.2 MB  (+0% vs baseline)
+    CPU usage : 50.0% avg  (peak 50.4%)
+    Feedback  :
+      SUCCESS: Your program handled these conditions well.
+
+  CPU_TENTH  [FAIL: timed out]
+    Wall time : 120.3s  (+426% vs baseline)
+    Exit code : -1
+    Memory    : 71.8 MB  (-48% vs baseline)
+    CPU usage : 10.0% avg  (peak 10.8%)
+    Feedback  :
+      FAIL: Your program exceeded the time limit under 'cpu_tenth' constraints.
+      WARN: CPU usage was only 10.0% under 'cpu_tenth'
+      
+Failure Analysis:
+      FAIL: Your program did not finish within the time limit.
+        Under reduced CPU this is expected for compute-intensive programs — your program may simply require more CPU than was available.
+        If this also happens under the 'none' profile, check for infinite loops or deadlocks.
+        GOOD: Program wrote a meaningful error to stderr before exiting.
+        WARN: Program used up to 71.8 MB RSS and exited with code -1 — verify all allocations are freed on every exit path.
+
+  MEMORY_SQUEEZE  [FAIL: out of memory (100 MB used)]
+    Wall time : 15.2s  (-34% vs baseline)
+    Exit code : 137
+    Memory    : 100.4 MB  (-27% vs baseline)
+    CPU usage : 100.2% avg  (peak 102.3%)
+    Feedback  :
+      FAIL: Your program ran out of memory and was killed.
+      FAIL: Your program ran out of memory and was killed.
+      
+Failure Analysis:
+      FAIL: Your program was killed because it used more memory than was available under this profile.
+        Peak memory usage was 100 MB before the kill.
+        This is not a code bug — it means your program's memory requirements exceed the constraint being tested.
+        To handle this gracefully: check allocation return values, reduce peak memory usage, or free data structures earlier.
+        NOTE: The program was killed by the OS and had no opportunity to write error output or run cleanup code.
+
+  MEMORY_BOMB  [FAIL: out of memory (87 MB used)]
+    Wall time : 10.2s  (-55% vs baseline)
+    Exit code : 137
+    Memory    : 86.9 MB  (-37% vs baseline)
+    CPU usage : 99.5% avg  (peak 100.0%)
+    Feedback  :
+      FAIL: Your program ran out of memory and was killed.
+      FAIL: Your program ran out of memory and was killed.
+      
+Failure Analysis:
+      FAIL: Your program was killed because it used more memory than was available under this profile.
+        Peak memory usage was 87 MB before the kill.
+        This is not a code bug — it means your program's memory requirements exceed the constraint being tested.
+        To handle this gracefully: check allocation return values, reduce peak memory usage, or free data structures earlier.
+        NOTE: The program was killed by the OS and had no opportunity to write error output or run cleanup code.
+
+  MEMORY_CEILING  [PASS]
+    Wall time : 23.4s  (+2% vs baseline)
+    Exit code : 0
+    Memory    : 137.3 MB  (+0% vs baseline)
+    CPU usage : 99.8% avg  (peak 100.3%)
+    Feedback  :
+      SUCCESS: Your program handled these conditions well.
+
+  NETWORK_DEGRADE  [PASS]
+    Wall time : 23.6s  (+4% vs baseline)
+    Exit code : 0
+    Memory    : 132.9 MB  (-3% vs baseline)
+    CPU usage : 100.1% avg  (peak 100.8%)
+    Feedback  :
+      SUCCESS: Your program handled these conditions well.
+
+  NETWORK_FLAP  [PASS]
+    Wall time : 21.3s  (-7% vs baseline)
+    Exit code : 0
+    Memory    : 132.8 MB  (-3% vs baseline)
+    CPU usage : 100.2% avg  (peak 103.1%)
+    Feedback  :
+      SUCCESS: Your program handled these conditions well.
+
+========================================================
+  OVERALL VERDICT
+========================================================
+
+  Profiles tested  : 7
+  Passing          : 3
+  Warnings         : 1
+  Failing          : 3
+
+  Failed under:
+ cpu_tenth              exceeded time limit
+ memory_squeeze         ran out of memory
+ memory_bomb            ran out of memory
+
+  Warnings:
+WARN: cpu_half               ran 79% slower than baseline
+
+  Your program failed under some resource constraints.
+  Review the feedback above for each failing profile.
+
+========================================================

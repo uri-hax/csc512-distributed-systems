@@ -1,0 +1,203 @@
+=== none ===
+Graph search BFS shortest paths
+Nodes: 50000  Avg degree: 6  BFS runs: 20
+
+Building graph...
+Graph built in 0.508124s
+Nodes: 50000
+
+BFS run 1/20  time=1120.87ms  source=node_0  reachable=50000  max_dist=6  avg_dist=4.64978
+BFS run 2/20  time=1103.41ms  source=node_2500  reachable=50000  max_dist=6  avg_dist=4.76586
+BFS run 3/20  time=1005.71ms  source=node_5000  reachable=50000  max_dist=6  avg_dist=4.62478
+BFS run 4/20  time=958.216ms  source=node_7500  reachable=50000  max_dist=6  avg_dist=4.64808
+BFS run 5/20  time=1077.34ms  source=node_10000  reachable=50000  max_dist=6  avg_dist=4.63646
+BFS run 6/20  time=1658.39ms  source=node_12500  reachable=50000  max_dist=6  avg_dist=4.67814
+BFS run 7/20  time=1122.93ms  source=node_15000  reachable=50000  max_dist=6  avg_dist=4.5055
+BFS run 8/20  time=1067.28ms  source=node_17500  reachable=50000  max_dist=6  avg_dist=4.69264
+BFS run 9/20  time=1433.67ms  source=node_20000  reachable=50000  max_dist=6  avg_dist=4.80476
+BFS run 10/20  time=1050.24ms  source=node_22500  reachable=50000  max_dist=6  avg_dist=4.578
+BFS run 11/20  time=1006.73ms  source=node_25000  reachable=50000  max_dist=6  avg_dist=4.56436
+BFS run 12/20  time=997.501ms  source=node_27500  reachable=50000  max_dist=6  avg_dist=4.76226
+BFS run 13/20  time=986.474ms  source=node_30000  reachable=50000  max_dist=6  avg_dist=4.57886
+BFS run 14/20  time=1051.2ms  source=node_32500  reachable=50000  max_dist=6  avg_dist=4.72842
+BFS run 15/20  time=1074.14ms  source=node_35000  reachable=50000  max_dist=6  avg_dist=4.74836
+BFS run 16/20  time=1045.57ms  source=node_37500  reachable=50000  max_dist=6  avg_dist=4.768
+BFS run 17/20  time=1005.48ms  source=node_40000  reachable=50000  max_dist=6  avg_dist=4.69382
+BFS run 18/20  time=993.103ms  source=node_42500  reachable=50000  max_dist=6  avg_dist=4.776
+BFS run 19/20  time=1063.82ms  source=node_45000  reachable=50000  max_dist=6  avg_dist=4.66906
+BFS run 20/20  time=1018.85ms  source=node_47500  reachable=50000  max_dist=6  avg_dist=4.70056
+
+All BFS runs complete.
+Stored 20 result sets.
+
+=== cpu_half ===
+Graph search BFS shortest paths
+Nodes: 50000  Avg degree: 6  BFS runs: 20
+
+Building graph...
+Graph built in 1.0181s
+Nodes: 50000
+
+BFS run 1/20  time=1910.66ms  source=node_0  reachable=50000  max_dist=6  avg_dist=4.64978
+BFS run 2/20  time=1913.63ms  source=node_2500  reachable=50000  max_dist=6  avg_dist=4.76586
+BFS run 3/20  time=2093.95ms  source=node_5000  reachable=50000  max_dist=6  avg_dist=4.62478
+BFS run 4/20  time=2073.36ms  source=node_7500  reachable=50000  max_dist=6  avg_dist=4.64808
+BFS run 5/20  time=2096.44ms  source=node_10000  reachable=50000  max_dist=6  avg_dist=4.63646
+BFS run 6/20  time=2117.52ms  source=node_12500  reachable=50000  max_dist=6  avg_dist=4.67814
+BFS run 7/20  time=2112.03ms  source=node_15000  reachable=50000  max_dist=6  avg_dist=4.5055
+BFS run 8/20  time=2060.85ms  source=node_17500  reachable=50000  max_dist=6  avg_dist=4.69264
+BFS run 9/20  time=2189.71ms  source=node_20000  reachable=50000  max_dist=6  avg_dist=4.80476
+BFS run 10/20  time=2317.63ms  source=node_22500  reachable=50000  max_dist=6  avg_dist=4.578
+BFS run 11/20  time=2406.18ms  source=node_25000  reachable=50000  max_dist=6  avg_dist=4.56436
+BFS run 12/20  time=2175.8ms  source=node_27500  reachable=50000  max_dist=6  avg_dist=4.76226
+BFS run 13/20  time=2205.17ms  source=node_30000  reachable=50000  max_dist=6  avg_dist=4.57886
+BFS run 14/20  time=2602.92ms  source=node_32500  reachable=50000  max_dist=6  avg_dist=4.72842
+BFS run 15/20  time=2164.2ms  source=node_35000  reachable=50000  max_dist=6  avg_dist=4.74836
+BFS run 16/20  time=1905.34ms  source=node_37500  reachable=50000  max_dist=6  avg_dist=4.768
+BFS run 17/20  time=1888.45ms  source=node_40000  reachable=50000  max_dist=6  avg_dist=4.69382
+BFS run 18/20  time=1917.18ms  source=node_42500  reachable=50000  max_dist=6  avg_dist=4.776
+BFS run 19/20  time=1988.8ms  source=node_45000  reachable=50000  max_dist=6  avg_dist=4.66906
+BFS run 20/20  time=1984.91ms  source=node_47500  reachable=50000  max_dist=6  avg_dist=4.70056
+
+All BFS runs complete.
+Stored 20 result sets.
+
+=== cpu_tenth ===
+
+=== memory_squeeze ===
+Graph search BFS shortest paths
+Nodes: 50000  Avg degree: 6  BFS runs: 20
+
+Building graph...
+Graph built in 0.543134s
+Nodes: 50000
+
+BFS run 1/20  time=972.999ms  source=node_0  reachable=50000  max_dist=6  avg_dist=4.64978
+BFS run 2/20  time=909.604ms  source=node_2500  reachable=50000  max_dist=6  avg_dist=4.76586
+BFS run 3/20  time=945.967ms  source=node_5000  reachable=50000  max_dist=6  avg_dist=4.62478
+BFS run 4/20  time=964.892ms  source=node_7500  reachable=50000  max_dist=6  avg_dist=4.64808
+BFS run 5/20  time=973.572ms  source=node_10000  reachable=50000  max_dist=6  avg_dist=4.63646
+BFS run 6/20  time=956.957ms  source=node_12500  reachable=50000  max_dist=6  avg_dist=4.67814
+BFS run 7/20  time=931.991ms  source=node_15000  reachable=50000  max_dist=6  avg_dist=4.5055
+BFS run 8/20  time=951.342ms  source=node_17500  reachable=50000  max_dist=6  avg_dist=4.69264
+BFS run 9/20  time=948.339ms  source=node_20000  reachable=50000  max_dist=6  avg_dist=4.80476
+BFS run 10/20  time=987.421ms  source=node_22500  reachable=50000  max_dist=6  avg_dist=4.578
+BFS run 11/20  time=1077.08ms  source=node_25000  reachable=50000  max_dist=6  avg_dist=4.56436
+BFS run 12/20  time=969.372ms  source=node_27500  reachable=50000  max_dist=6  avg_dist=4.76226
+BFS run 13/20  time=948.73ms  source=node_30000  reachable=50000  max_dist=6  avg_dist=4.57886
+BFS run 14/20  time=993.755ms  source=node_32500  reachable=50000  max_dist=6  avg_dist=4.72842
+
+=== memory_bomb ===
+Graph search BFS shortest paths
+Nodes: 50000  Avg degree: 6  BFS runs: 20
+
+Building graph...
+Graph built in 0.521617s
+Nodes: 50000
+
+BFS run 1/20  time=971.044ms  source=node_0  reachable=50000  max_dist=6  avg_dist=4.64978
+BFS run 2/20  time=953.741ms  source=node_2500  reachable=50000  max_dist=6  avg_dist=4.76586
+BFS run 3/20  time=922.415ms  source=node_5000  reachable=50000  max_dist=6  avg_dist=4.62478
+BFS run 4/20  time=903.505ms  source=node_7500  reachable=50000  max_dist=6  avg_dist=4.64808
+BFS run 5/20  time=935.793ms  source=node_10000  reachable=50000  max_dist=6  avg_dist=4.63646
+BFS run 6/20  time=915.975ms  source=node_12500  reachable=50000  max_dist=6  avg_dist=4.67814
+BFS run 7/20  time=1037.6ms  source=node_15000  reachable=50000  max_dist=6  avg_dist=4.5055
+BFS run 8/20  time=1000.38ms  source=node_17500  reachable=50000  max_dist=6  avg_dist=4.69264
+BFS run 9/20  time=980.477ms  source=node_20000  reachable=50000  max_dist=6  avg_dist=4.80476
+
+=== memory_ceiling ===
+Graph search BFS shortest paths
+Nodes: 50000  Avg degree: 6  BFS runs: 20
+
+Building graph...
+Graph built in 0.517769s
+Nodes: 50000
+
+BFS run 1/20  time=1470.15ms  source=node_0  reachable=50000  max_dist=6  avg_dist=4.64978
+BFS run 2/20  time=1050.06ms  source=node_2500  reachable=50000  max_dist=6  avg_dist=4.76586
+BFS run 3/20  time=1022.64ms  source=node_5000  reachable=50000  max_dist=6  avg_dist=4.62478
+BFS run 4/20  time=993.8ms  source=node_7500  reachable=50000  max_dist=6  avg_dist=4.64808
+BFS run 5/20  time=943.37ms  source=node_10000  reachable=50000  max_dist=6  avg_dist=4.63646
+BFS run 6/20  time=961.99ms  source=node_12500  reachable=50000  max_dist=6  avg_dist=4.67814
+BFS run 7/20  time=965.175ms  source=node_15000  reachable=50000  max_dist=6  avg_dist=4.5055
+BFS run 8/20  time=1009.18ms  source=node_17500  reachable=50000  max_dist=6  avg_dist=4.69264
+BFS run 9/20  time=997.106ms  source=node_20000  reachable=50000  max_dist=6  avg_dist=4.80476
+BFS run 10/20  time=1083.27ms  source=node_22500  reachable=50000  max_dist=6  avg_dist=4.578
+BFS run 11/20  time=964.991ms  source=node_25000  reachable=50000  max_dist=6  avg_dist=4.56436
+BFS run 12/20  time=1026.8ms  source=node_27500  reachable=50000  max_dist=6  avg_dist=4.76226
+BFS run 13/20  time=959.295ms  source=node_30000  reachable=50000  max_dist=6  avg_dist=4.57886
+BFS run 14/20  time=954.14ms  source=node_32500  reachable=50000  max_dist=6  avg_dist=4.72842
+BFS run 15/20  time=1236.21ms  source=node_35000  reachable=50000  max_dist=6  avg_dist=4.74836
+BFS run 16/20  time=1065.63ms  source=node_37500  reachable=50000  max_dist=6  avg_dist=4.768
+BFS run 17/20  time=1008.95ms  source=node_40000  reachable=50000  max_dist=6  avg_dist=4.69382
+BFS run 18/20  time=1010.26ms  source=node_42500  reachable=50000  max_dist=6  avg_dist=4.776
+BFS run 19/20  time=988.027ms  source=node_45000  reachable=50000  max_dist=6  avg_dist=4.66906
+BFS run 20/20  time=1163.95ms  source=node_47500  reachable=50000  max_dist=6  avg_dist=4.70056
+
+All BFS runs complete.
+Stored 20 result sets.
+
+=== network_degrade ===
+Graph search BFS shortest paths
+Nodes: 50000  Avg degree: 6  BFS runs: 20
+
+Building graph...
+Graph built in 0.603666s
+Nodes: 50000
+
+BFS run 1/20  time=992.342ms  source=node_0  reachable=50000  max_dist=6  avg_dist=4.64978
+BFS run 2/20  time=993.818ms  source=node_2500  reachable=50000  max_dist=6  avg_dist=4.76586
+BFS run 3/20  time=1076.45ms  source=node_5000  reachable=50000  max_dist=6  avg_dist=4.62478
+BFS run 4/20  time=1423ms  source=node_7500  reachable=50000  max_dist=6  avg_dist=4.64808
+BFS run 5/20  time=1022.66ms  source=node_10000  reachable=50000  max_dist=6  avg_dist=4.63646
+BFS run 6/20  time=1006.88ms  source=node_12500  reachable=50000  max_dist=6  avg_dist=4.67814
+BFS run 7/20  time=976.923ms  source=node_15000  reachable=50000  max_dist=6  avg_dist=4.5055
+BFS run 8/20  time=969.876ms  source=node_17500  reachable=50000  max_dist=6  avg_dist=4.69264
+BFS run 9/20  time=960.871ms  source=node_20000  reachable=50000  max_dist=6  avg_dist=4.80476
+BFS run 10/20  time=1044.95ms  source=node_22500  reachable=50000  max_dist=6  avg_dist=4.578
+BFS run 11/20  time=939.297ms  source=node_25000  reachable=50000  max_dist=6  avg_dist=4.56436
+BFS run 12/20  time=975.88ms  source=node_27500  reachable=50000  max_dist=6  avg_dist=4.76226
+BFS run 13/20  time=948.681ms  source=node_30000  reachable=50000  max_dist=6  avg_dist=4.57886
+BFS run 14/20  time=993.643ms  source=node_32500  reachable=50000  max_dist=6  avg_dist=4.72842
+BFS run 15/20  time=958.136ms  source=node_35000  reachable=50000  max_dist=6  avg_dist=4.74836
+BFS run 16/20  time=960.169ms  source=node_37500  reachable=50000  max_dist=6  avg_dist=4.768
+BFS run 17/20  time=944.737ms  source=node_40000  reachable=50000  max_dist=6  avg_dist=4.69382
+BFS run 18/20  time=962.68ms  source=node_42500  reachable=50000  max_dist=6  avg_dist=4.776
+BFS run 19/20  time=970.011ms  source=node_45000  reachable=50000  max_dist=6  avg_dist=4.66906
+BFS run 20/20  time=998.509ms  source=node_47500  reachable=50000  max_dist=6  avg_dist=4.70056
+
+All BFS runs complete.
+Stored 20 result sets.
+
+=== network_flap ===
+Graph search BFS shortest paths
+Nodes: 50000  Avg degree: 6  BFS runs: 20
+
+Building graph...
+Graph built in 0.51953s
+Nodes: 50000
+
+BFS run 1/20  time=1012.4ms  source=node_0  reachable=50000  max_dist=6  avg_dist=4.64978
+BFS run 2/20  time=928.384ms  source=node_2500  reachable=50000  max_dist=6  avg_dist=4.76586
+BFS run 3/20  time=939.872ms  source=node_5000  reachable=50000  max_dist=6  avg_dist=4.62478
+BFS run 4/20  time=992.008ms  source=node_7500  reachable=50000  max_dist=6  avg_dist=4.64808
+BFS run 5/20  time=988.608ms  source=node_10000  reachable=50000  max_dist=6  avg_dist=4.63646
+BFS run 6/20  time=977.677ms  source=node_12500  reachable=50000  max_dist=6  avg_dist=4.67814
+BFS run 7/20  time=982.502ms  source=node_15000  reachable=50000  max_dist=6  avg_dist=4.5055
+BFS run 8/20  time=962.642ms  source=node_17500  reachable=50000  max_dist=6  avg_dist=4.69264
+BFS run 9/20  time=920.654ms  source=node_20000  reachable=50000  max_dist=6  avg_dist=4.80476
+BFS run 10/20  time=973.907ms  source=node_22500  reachable=50000  max_dist=6  avg_dist=4.578
+BFS run 11/20  time=1119.88ms  source=node_25000  reachable=50000  max_dist=6  avg_dist=4.56436
+BFS run 12/20  time=989.411ms  source=node_27500  reachable=50000  max_dist=6  avg_dist=4.76226
+BFS run 13/20  time=976.173ms  source=node_30000  reachable=50000  max_dist=6  avg_dist=4.57886
+BFS run 14/20  time=947.26ms  source=node_32500  reachable=50000  max_dist=6  avg_dist=4.72842
+BFS run 15/20  time=984.03ms  source=node_35000  reachable=50000  max_dist=6  avg_dist=4.74836
+BFS run 16/20  time=950.992ms  source=node_37500  reachable=50000  max_dist=6  avg_dist=4.768
+BFS run 17/20  time=1135.12ms  source=node_40000  reachable=50000  max_dist=6  avg_dist=4.69382
+BFS run 18/20  time=950.27ms  source=node_42500  reachable=50000  max_dist=6  avg_dist=4.776
+BFS run 19/20  time=939.437ms  source=node_45000  reachable=50000  max_dist=6  avg_dist=4.66906
+BFS run 20/20  time=975.592ms  source=node_47500  reachable=50000  max_dist=6  avg_dist=4.70056
+
+All BFS runs complete.
+Stored 20 result sets.
+

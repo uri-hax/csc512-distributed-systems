@@ -1,0 +1,16 @@
+=== none ===
+
+=== cpu_half ===
+
+=== cpu_tenth ===
+Timed out after 120s
+=== memory_squeeze ===
+
+=== memory_bomb ===
+
+=== memory_ceiling ===
+
+=== network_degrade ===
+
+=== network_flap ===
+
