@@ -1,0 +1,3 @@
+=== none ===
+INFO: index shutdown freed 80000 log entries
+
