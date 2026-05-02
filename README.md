@@ -88,11 +88,29 @@ You will be assessed by your class participation throughout the semester. Focus 
 
 #### Final Presentation
 
-On April 21st from 12:30 to 1:45PM the group will make a presentation to CSC412 students about our efforts this semester. I will give a 5-minute introduction. Then, each student in 512 will give a 5-minute presentation on their efforts.
+On April 21st, from 12:30 to 1:45 PM, the group will make a presentation to CSC412 students about our efforts this semester. I will give a 5-minute introduction. Then, each student in 512 will give a 5-minute presentation on their efforts.
 
-#### Final Group Research Paper
+#### Final Research Paper
 
-We want to consolidate our efforts into a research paper to submit to a Computer Science conference in the near future. This will likely be a systems-style paper. We can discuss and find venues during our meetings. :)
+We want to consolidate our efforts into a research paper to submit to a Computer Science conference in the near future. This will likely be a systems-style paper. Future venues could be directed at systems conferences. :)
+
+Here is a paper writing template:
+[https://www.overleaf.com/read/ppycbnmbtryj#125294](https://www.overleaf.com/read/ppycbnmbtryj#125294)
+
+For your final individual research paper, please only write:
+* Introduction
+* Systems/Methods
+* Results
+
+Email your Overleaf LaTeX documents to Shaun by May 10th, at 11:59 PM. If you need some extra time, please contact Shaun.
+
+Grading (100 points):
+* Introduction (30)
+* Systems/Methods (40)
+* Results (30)
+
+If you submit the final paper by Wednesday, April 29th, at 11:59 PM, **you will get 10 extra credit points.**
+If you submit the final paper by Thursday, May 7th, at 11:59 PM, **you will get 5 extra credit points.**
 
 ### Final Letter Grade Distribution
 Final letter grades are calculated using the ranges below. These numerical values might be lowered but will not be raised. Your final letter grade will be the letter corresponding to the highest cutoff value less than or equal to the final grade. For example, a final grade of 92.99 is an A- and not an A. 

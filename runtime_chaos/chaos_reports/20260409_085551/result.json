@@ -1,0 +1,214 @@
+[
+  {
+    "profile": "none",
+    "exit_code": 0,
+    "oom_killed": false,
+    "timed_out": false,
+    "wall_time_s": 2.4,
+    "peak_rss_mb": 26.9,
+    "cpu_peak_pct": 104.9,
+    "cpu_avg_pct": 104.9,
+    "pids_peak": 1,
+    "has_stderr": true,
+    "events": [
+      "[   0.0s] \u00b7  Container: grader-chaos-64741cccea",
+      "[   0.0s] \u00b7  Profile  : none \u2014 clean baseline run",
+      "[   0.0s] \u00b7  Command  : ./log_parse"
+    ],
+    "metrics": {
+      "cpu_avg": 0,
+      "cpu_min": 0,
+      "mem_peak": 0,
+      "io_avg": 0,
+      "io_min": 0,
+      "history_sizes": [],
+      "flush_detected": false
+    }
+  },
+  {
+    "profile": "cpu_half",
+    "exit_code": 0,
+    "oom_killed": false,
+    "timed_out": false,
+    "wall_time_s": 4.06,
+    "peak_rss_mb": 35.8,
+    "cpu_peak_pct": 51.2,
+    "cpu_avg_pct": 51.1,
+    "pids_peak": 1,
+    "has_stderr": true,
+    "events": [
+      "[   0.0s] \u00b7  Container: grader-chaos-b3a38a0e00",
+      "[   0.0s] \u00b7  Profile  : cpu_half \u2014 Fixed 50% CPU from start",
+      "[   0.0s] \u00b7  Command  : ./log_parse"
+    ],
+    "metrics": {
+      "cpu_avg": 0,
+      "cpu_min": 0,
+      "mem_peak": 0,
+      "io_avg": 0,
+      "io_min": 0,
+      "history_sizes": [],
+      "flush_detected": false
+    }
+  },
+  {
+    "profile": "cpu_tenth",
+    "exit_code": 0,
+    "oom_killed": false,
+    "timed_out": false,
+    "wall_time_s": 32.2,
+    "peak_rss_mb": 39.9,
+    "cpu_peak_pct": 10.7,
+    "cpu_avg_pct": 10.0,
+    "pids_peak": 1,
+    "has_stderr": true,
+    "events": [
+      "[   0.0s] \u00b7  Container: grader-chaos-3282d1de7d",
+      "[   0.0s] \u00b7  Profile  : cpu_tenth \u2014 Fixed 10% CPU from start (Severely throttle CPU)",
+      "[   0.0s] \u00b7  Command  : ./log_parse"
+    ],
+    "metrics": {
+      "cpu_avg": 0,
+      "cpu_min": 0,
+      "mem_peak": 0,
+      "io_avg": 0,
+      "io_min": 0,
+      "history_sizes": [],
+      "flush_detected": false
+    }
+  },
+  {
+    "profile": "memory_squeeze",
+    "exit_code": 0,
+    "oom_killed": false,
+    "timed_out": false,
+    "wall_time_s": 2.91,
+    "peak_rss_mb": 18.8,
+    "cpu_peak_pct": 102.0,
+    "cpu_avg_pct": 102.0,
+    "pids_peak": 1,
+    "has_stderr": true,
+    "events": [
+      "[   0.0s] \u00b7  Container: grader-chaos-c0b15c9c51",
+      "[   0.0s] \u00b7  Profile  : memory_squeeze \u2014 RAM shrinks 512\u2192256\u2192128\u219264\u219232 MB over 20s",
+      "[   0.0s] \u00b7  Command  : ./log_parse"
+    ],
+    "metrics": {
+      "cpu_avg": 0,
+      "cpu_min": 0,
+      "mem_peak": 0,
+      "io_avg": 0,
+      "io_min": 0,
+      "history_sizes": [],
+      "flush_detected": false
+    }
+  },
+  {
+    "profile": "memory_bomb",
+    "exit_code": 0,
+    "oom_killed": false,
+    "timed_out": false,
+    "wall_time_s": 3.16,
+    "peak_rss_mb": 20.9,
+    "cpu_peak_pct": 101.3,
+    "cpu_avg_pct": 101.3,
+    "pids_peak": 1,
+    "has_stderr": true,
+    "events": [
+      "[   0.0s] \u00b7  Container: grader-chaos-87df084a46",
+      "[   0.0s] \u00b7  Profile  : memory_bomb \u2014 Generous RAM, then sudden drop to 16 MB at 10s \u2014 tests OOM handling",
+      "[   0.0s] \u00b7  Command  : ./log_parse"
+    ],
+    "metrics": {
+      "cpu_avg": 0,
+      "cpu_min": 0,
+      "mem_peak": 0,
+      "io_avg": 0,
+      "io_min": 0,
+      "history_sizes": [],
+      "flush_detected": false
+    }
+  },
+  {
+    "profile": "memory_ceiling",
+    "exit_code": 0,
+    "oom_killed": false,
+    "timed_out": false,
+    "wall_time_s": 2.83,
+    "peak_rss_mb": 21.4,
+    "cpu_peak_pct": 100.5,
+    "cpu_avg_pct": 100.5,
+    "pids_peak": 1,
+    "has_stderr": true,
+    "events": [
+      "[   0.0s] \u00b7  Container: grader-chaos-3fd9ca70be",
+      "[   0.0s] \u00b7  Profile  : memory_ceiling \u2014 Fixed 256 MB ceiling from the start",
+      "[   0.0s] \u00b7  Command  : ./log_parse"
+    ],
+    "metrics": {
+      "cpu_avg": 0,
+      "cpu_min": 0,
+      "mem_peak": 0,
+      "io_avg": 0,
+      "io_min": 0,
+      "history_sizes": [],
+      "flush_detected": false
+    }
+  },
+  {
+    "profile": "network_degrade",
+    "exit_code": 0,
+    "oom_killed": false,
+    "timed_out": false,
+    "wall_time_s": 2.68,
+    "peak_rss_mb": 26.5,
+    "cpu_peak_pct": 103.1,
+    "cpu_avg_pct": 103.1,
+    "pids_peak": 1,
+    "has_stderr": true,
+    "events": [
+      "[   0.0s] \u00b7  Network chaos enabled \u2014 container has bridge network + NET_ADMIN",
+      "[   0.0s] \u00b7  Container: grader-chaos-a5f59a6e4a",
+      "[   0.0s] \u00b7  Profile  : network_degrade \u2014 Latency and loss ramp up, then bandwidth capped at 64kbps",
+      "[   0.0s] \u00b7  Command  : ./log_parse",
+      "[   2.6s] \u26a0  tc warn: Error response from daemon: container 2d1c084b452895381b447e55023dc5fd670e1e0cdf362066f632a6df5f07cc59 is not running",
+      "[   2.7s] \u26a0  tc warn: Error response from daemon: No such container: grader-chaos-a5f59a6e4a"
+    ],
+    "metrics": {
+      "cpu_avg": 0,
+      "cpu_min": 0,
+      "mem_peak": 0,
+      "io_avg": 0,
+      "io_min": 0,
+      "history_sizes": [],
+      "flush_detected": false
+    }
+  },
+  {
+    "profile": "network_flap",
+    "exit_code": 0,
+    "oom_killed": false,
+    "timed_out": false,
+    "wall_time_s": 3.47,
+    "peak_rss_mb": 25.1,
+    "cpu_peak_pct": 105.2,
+    "cpu_avg_pct": 105.2,
+    "pids_peak": 1,
+    "has_stderr": true,
+    "events": [
+      "[   0.0s] \u00b7  Network chaos enabled \u2014 container has bridge network + NET_ADMIN",
+      "[   0.0s] \u00b7  Container: grader-chaos-957aade11e",
+      "[   0.0s] \u00b7  Profile  : network_flap \u2014 100% packet loss every 5s to simulate intermittent outage",
+      "[   0.0s] \u00b7  Command  : ./log_parse"
+    ],
+    "metrics": {
+      "cpu_avg": 0,
+      "cpu_min": 0,
+      "mem_peak": 0,
+      "io_avg": 0,
+      "io_min": 0,
+      "history_sizes": [],
+      "flush_detected": false
+    }
+  }
+]

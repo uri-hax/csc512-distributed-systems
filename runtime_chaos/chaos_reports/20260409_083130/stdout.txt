@@ -1,0 +1,177 @@
+=== none ===
+Log indexer starting
+Indexing simulated log stream...
+
+Target entries : 80000 (~75 MB estimated)
+
+[0.00773792s]  indexed=500  keywords=36  mem_est=0.145892 MB  healthy=yes
+[0.0143228s]  indexed=1000  keywords=36  mem_est=0.291762 MB  healthy=yes
+[0.0200883s]  indexed=1500  keywords=36  mem_est=0.437541 MB  healthy=yes
+[0.025096s]  indexed=2000  keywords=36  mem_est=0.583426 MB  healthy=yes
+[0.0297582s]  indexed=2500  keywords=36  mem_est=0.729487 MB  healthy=yes
+[0.0342842s]  indexed=3000  keywords=36  mem_est=0.875628 MB  healthy=yes
+[0.0392836s]  indexed=3500  keywords=36  mem_est=1.02143 MB  healthy=yes
+[0.0439934s]  indexed=4000  keywords=36  mem_est=1.16717 MB  healthy=yes
+[0.0484834s]  indexed=4500  keywords=36  mem_est=1.31338 MB  healthy=yes
+[0.0530535s]  indexed=5000  keywords=36  mem_est=1.45945 MB  healthy=yes
+[0.0575593s]  indexed=5500  keywords=36  mem_est=1.60591 MB  healthy=yes
+[0.0623612s]  indexed=6000  keywords=36  mem_est=1.75172 MB  healthy=yes
+[0.0669456s]  indexed=6500  keywords=36  mem_est=1.8978 MB  healthy=yes
+[0.07133s]  indexed=7000  keywords=36  mem_est=2.04349 MB  healthy=yes
+[0.07584s]  indexed=7500  keywords=36  mem_est=2.18945 MB  healthy=yes
+[0.0805066s]  indexed=8000  keywords=36  mem_est=2.33522 MB  healthy=yes
+[0.0849943s]  indexed=8500  keywords=36  mem_est=2.48111 MB  healthy=yes
+[0.089367s]  indexed=9000  keywords=36  mem_est=2.62683 MB  healthy=yes
+[0.0937447s]  indexed=9500  keywords=36  mem_est=2.77248 MB  healthy=yes
+[0.098091s]  indexed=10000  keywords=36  mem_est=2.91822 MB  healthy=yes
+[0.102458s]  indexed=10500  keywords=36  mem_est=3.06419 MB  healthy=yes
+[0.107035s]  indexed=11000  keywords=36  mem_est=3.21028 MB  healthy=yes
+[0.111754s]  indexed=11500  keywords=36  mem_est=3.35629 MB  healthy=yes
+[0.116358s]  indexed=12000  keywords=36  mem_est=3.50232 MB  healthy=yes
+[0.121091s]  indexed=12500  keywords=36  mem_est=3.64817 MB  healthy=yes
+[0.125581s]  indexed=13000  keywords=36  mem_est=3.79383 MB  healthy=yes
+[0.129994s]  indexed=13500  keywords=36  mem_est=3.93963 MB  healthy=yes
+[0.13444s]  indexed=14000  keywords=36  mem_est=4.08578 MB  healthy=yes
+[0.1389s]  indexed=14500  keywords=36  mem_est=4.23175 MB  healthy=yes
+[0.143262s]  indexed=15000  keywords=36  mem_est=4.37762 MB  healthy=yes
+[0.147751s]  indexed=15500  keywords=36  mem_est=4.52383 MB  healthy=yes
+[0.152298s]  indexed=16000  keywords=36  mem_est=4.67007 MB  healthy=yes
+[0.156965s]  indexed=16500  keywords=36  mem_est=4.81609 MB  healthy=yes
+[0.161328s]  indexed=17000  keywords=36  mem_est=4.9618 MB  healthy=yes
+[0.165831s]  indexed=17500  keywords=36  mem_est=5.10772 MB  healthy=yes
+[0.179805s]  indexed=18000  keywords=36  mem_est=5.25358 MB  healthy=yes
+[0.187968s]  indexed=18500  keywords=36  mem_est=5.39953 MB  healthy=yes
+[0.193656s]  indexed=19000  keywords=36  mem_est=5.54545 MB  healthy=yes
+[0.198147s]  indexed=19500  keywords=36  mem_est=5.69146 MB  healthy=yes
+[0.202813s]  indexed=20000  keywords=36  mem_est=5.83731 MB  healthy=yes
+[0.20794s]  indexed=20500  keywords=36  mem_est=5.98304 MB  healthy=yes
+[0.21261s]  indexed=21000  keywords=36  mem_est=6.12904 MB  healthy=yes
+[0.217283s]  indexed=21500  keywords=36  mem_est=6.27511 MB  healthy=yes
+[0.221946s]  indexed=22000  keywords=36  mem_est=6.42101 MB  healthy=yes
+[0.226484s]  indexed=22500  keywords=36  mem_est=6.56658 MB  healthy=yes
+[0.231362s]  indexed=23000  keywords=36  mem_est=6.7124 MB  healthy=yes
+[0.236016s]  indexed=23500  keywords=36  mem_est=6.85841 MB  healthy=yes
+[0.240515s]  indexed=24000  keywords=36  mem_est=7.00443 MB  healthy=yes
+[0.245135s]  indexed=24500  keywords=36  mem_est=7.15042 MB  healthy=yes
+[0.250337s]  indexed=25000  keywords=36  mem_est=7.29657 MB  healthy=yes
+[0.254895s]  indexed=25500  keywords=36  mem_est=7.44248 MB  healthy=yes
+[0.259788s]  indexed=26000  keywords=36  mem_est=7.58848 MB  healthy=yes
+[0.265682s]  indexed=26500  keywords=36  mem_est=7.73461 MB  healthy=yes
+[0.271646s]  indexed=27000  keywords=36  mem_est=7.88015 MB  healthy=yes
+[0.278122s]  indexed=27500  keywords=36  mem_est=8.02578 MB  healthy=yes
+[0.283187s]  indexed=28000  keywords=36  mem_est=8.17192 MB  healthy=yes
+[0.304494s]  indexed=28500  keywords=36  mem_est=8.31791 MB  healthy=yes
+[0.314676s]  indexed=29000  keywords=36  mem_est=8.46398 MB  healthy=yes
+[0.345815s]  indexed=29500  keywords=36  mem_est=8.6098 MB  healthy=yes
+[0.35112s]  indexed=30000  keywords=36  mem_est=8.75579 MB  healthy=yes
+[0.3784s]  indexed=30500  keywords=36  mem_est=8.90118 MB  healthy=yes
+[0.383154s]  indexed=31000  keywords=36  mem_est=9.04739 MB  healthy=yes
+[0.388538s]  indexed=31500  keywords=36  mem_est=9.19306 MB  healthy=yes
+[0.394347s]  indexed=32000  keywords=36  mem_est=9.33875 MB  healthy=yes
+[0.398967s]  indexed=32500  keywords=36  mem_est=9.4849 MB  healthy=yes
+[0.405928s]  indexed=33000  keywords=36  mem_est=9.63084 MB  healthy=yes
+[0.412035s]  indexed=33500  keywords=36  mem_est=9.77658 MB  healthy=yes
+[0.416565s]  indexed=34000  keywords=36  mem_est=9.92229 MB  healthy=yes
+[0.420949s]  indexed=34500  keywords=36  mem_est=10.0679 MB  healthy=yes
+[0.425862s]  indexed=35000  keywords=36  mem_est=10.2139 MB  healthy=yes
+[0.432296s]  indexed=35500  keywords=36  mem_est=10.3599 MB  healthy=yes
+[0.436809s]  indexed=36000  keywords=36  mem_est=10.5056 MB  healthy=yes
+[0.441377s]  indexed=36500  keywords=36  mem_est=10.6514 MB  healthy=yes
+[0.446001s]  indexed=37000  keywords=36  mem_est=10.7973 MB  healthy=yes
+[0.45047s]  indexed=37500  keywords=36  mem_est=10.9429 MB  healthy=yes
+[0.455053s]  indexed=38000  keywords=36  mem_est=11.0886 MB  healthy=yes
+[0.464772s]  indexed=38500  keywords=36  mem_est=11.2345 MB  healthy=yes
+[0.484556s]  indexed=39000  keywords=36  mem_est=11.3802 MB  healthy=yes
+[0.489193s]  indexed=39500  keywords=36  mem_est=11.5261 MB  healthy=yes
+[0.493596s]  indexed=40000  keywords=36  mem_est=11.672 MB  healthy=yes
+[0.498166s]  indexed=40500  keywords=36  mem_est=11.818 MB  healthy=yes
+[0.502539s]  indexed=41000  keywords=36  mem_est=11.9638 MB  healthy=yes
+[0.507049s]  indexed=41500  keywords=36  mem_est=12.1099 MB  healthy=yes
+[0.511553s]  indexed=42000  keywords=36  mem_est=12.2559 MB  healthy=yes
+[0.515991s]  indexed=42500  keywords=36  mem_est=12.402 MB  healthy=yes
+[0.520474s]  indexed=43000  keywords=36  mem_est=12.5481 MB  healthy=yes
+[0.524913s]  indexed=43500  keywords=36  mem_est=12.6939 MB  healthy=yes
+[0.529759s]  indexed=44000  keywords=36  mem_est=12.8401 MB  healthy=yes
+[0.5342s]  indexed=44500  keywords=36  mem_est=12.9862 MB  healthy=yes
+[0.538809s]  indexed=45000  keywords=36  mem_est=13.1322 MB  healthy=yes
+[0.543962s]  indexed=45500  keywords=36  mem_est=13.278 MB  healthy=yes
+[0.549547s]  indexed=46000  keywords=36  mem_est=13.4238 MB  healthy=yes
+[0.554615s]  indexed=46500  keywords=36  mem_est=13.57 MB  healthy=yes
+[0.559106s]  indexed=47000  keywords=36  mem_est=13.7163 MB  healthy=yes
+[0.563787s]  indexed=47500  keywords=36  mem_est=13.8622 MB  healthy=yes
+[0.56829s]  indexed=48000  keywords=36  mem_est=14.0081 MB  healthy=yes
+[0.572958s]  indexed=48500  keywords=36  mem_est=14.1538 MB  healthy=yes
+[0.57767s]  indexed=49000  keywords=36  mem_est=14.2997 MB  healthy=yes
+[0.5826s]  indexed=49500  keywords=36  mem_est=14.4456 MB  healthy=yes
+[0.587003s]  indexed=50000  keywords=36  mem_est=14.5913 MB  healthy=yes
+[0.591511s]  indexed=50500  keywords=36  mem_est=14.7369 MB  healthy=yes
+[0.596207s]  indexed=51000  keywords=36  mem_est=14.8828 MB  healthy=yes
+[0.600987s]  indexed=51500  keywords=36  mem_est=15.0288 MB  healthy=yes
+[0.605612s]  indexed=52000  keywords=36  mem_est=15.1749 MB  healthy=yes
+[0.610315s]  indexed=52500  keywords=36  mem_est=15.3212 MB  healthy=yes
+[0.615014s]  indexed=53000  keywords=36  mem_est=15.467 MB  healthy=yes
+[0.619723s]  indexed=53500  keywords=36  mem_est=15.6129 MB  healthy=yes
+[0.624147s]  indexed=54000  keywords=36  mem_est=15.7584 MB  healthy=yes
+[0.628953s]  indexed=54500  keywords=36  mem_est=15.9046 MB  healthy=yes
+[0.633629s]  indexed=55000  keywords=36  mem_est=16.0506 MB  healthy=yes
+[0.638175s]  indexed=55500  keywords=36  mem_est=16.1963 MB  healthy=yes
+[0.642734s]  indexed=56000  keywords=36  mem_est=16.3426 MB  healthy=yes
+[0.647323s]  indexed=56500  keywords=36  mem_est=16.4884 MB  healthy=yes
+[0.651837s]  indexed=57000  keywords=36  mem_est=16.6344 MB  healthy=yes
+[0.656285s]  indexed=57500  keywords=36  mem_est=16.7804 MB  healthy=yes
+[0.660704s]  indexed=58000  keywords=36  mem_est=16.9263 MB  healthy=yes
+[0.665242s]  indexed=58500  keywords=36  mem_est=17.0724 MB  healthy=yes
+[0.669626s]  indexed=59000  keywords=36  mem_est=17.2181 MB  healthy=yes
+[0.674132s]  indexed=59500  keywords=36  mem_est=17.3638 MB  healthy=yes
+[0.678595s]  indexed=60000  keywords=36  mem_est=17.5101 MB  healthy=yes
+[0.683096s]  indexed=60500  keywords=36  mem_est=17.6559 MB  healthy=yes
+[0.6877s]  indexed=61000  keywords=36  mem_est=17.802 MB  healthy=yes
+[0.692142s]  indexed=61500  keywords=36  mem_est=17.9478 MB  healthy=yes
+[0.696616s]  indexed=62000  keywords=36  mem_est=18.0939 MB  healthy=yes
+[0.701067s]  indexed=62500  keywords=36  mem_est=18.2398 MB  healthy=yes
+[0.705453s]  indexed=63000  keywords=36  mem_est=18.3859 MB  healthy=yes
+[0.710908s]  indexed=63500  keywords=36  mem_est=18.5319 MB  healthy=yes
+[0.715423s]  indexed=64000  keywords=36  mem_est=18.6776 MB  healthy=yes
+[0.720109s]  indexed=64500  keywords=36  mem_est=18.8234 MB  healthy=yes
+[0.724545s]  indexed=65000  keywords=36  mem_est=18.9693 MB  healthy=yes
+[0.729044s]  indexed=65500  keywords=36  mem_est=19.115 MB  healthy=yes
+[0.733803s]  indexed=66000  keywords=36  mem_est=19.2609 MB  healthy=yes
+[0.738241s]  indexed=66500  keywords=36  mem_est=19.4068 MB  healthy=yes
+[0.74267s]  indexed=67000  keywords=36  mem_est=19.5524 MB  healthy=yes
+[0.747071s]  indexed=67500  keywords=36  mem_est=19.6981 MB  healthy=yes
+[0.751614s]  indexed=68000  keywords=36  mem_est=19.844 MB  healthy=yes
+[0.756061s]  indexed=68500  keywords=36  mem_est=19.99 MB  healthy=yes
+[0.760492s]  indexed=69000  keywords=36  mem_est=20.1359 MB  healthy=yes
+[0.766153s]  indexed=69500  keywords=36  mem_est=20.2817 MB  healthy=yes
+[0.770721s]  indexed=70000  keywords=36  mem_est=20.4277 MB  healthy=yes
+[0.77538s]  indexed=70500  keywords=36  mem_est=20.5735 MB  healthy=yes
+[0.780176s]  indexed=71000  keywords=36  mem_est=20.7194 MB  healthy=yes
+[0.784716s]  indexed=71500  keywords=36  mem_est=20.8653 MB  healthy=yes
+[0.789338s]  indexed=72000  keywords=36  mem_est=21.0113 MB  healthy=yes
+[0.793914s]  indexed=72500  keywords=36  mem_est=21.1574 MB  healthy=yes
+[0.798522s]  indexed=73000  keywords=36  mem_est=21.303 MB  healthy=yes
+[0.803291s]  indexed=73500  keywords=36  mem_est=21.4491 MB  healthy=yes
+[0.80813s]  indexed=74000  keywords=36  mem_est=21.5949 MB  healthy=yes
+[0.813317s]  indexed=74500  keywords=36  mem_est=21.7409 MB  healthy=yes
+[0.817989s]  indexed=75000  keywords=36  mem_est=21.8869 MB  healthy=yes
+[0.822488s]  indexed=75500  keywords=36  mem_est=22.0328 MB  healthy=yes
+[0.827014s]  indexed=76000  keywords=36  mem_est=22.1784 MB  healthy=yes
+[0.832442s]  indexed=76500  keywords=36  mem_est=22.3242 MB  healthy=yes
+[0.837385s]  indexed=77000  keywords=36  mem_est=22.4703 MB  healthy=yes
+[0.841914s]  indexed=77500  keywords=36  mem_est=22.6163 MB  healthy=yes
+[0.846739s]  indexed=78000  keywords=36  mem_est=22.7623 MB  healthy=yes
+[0.851219s]  indexed=78500  keywords=36  mem_est=22.9083 MB  healthy=yes
+[0.855837s]  indexed=79000  keywords=36  mem_est=23.0542 MB  healthy=yes
+[0.861029s]  indexed=79500  keywords=36  mem_est=23.2004 MB  healthy=yes
+[0.865591s]  indexed=80000  keywords=36  mem_est=23.3462 MB  healthy=yes
+
+Sample keyword lookups:
+  connection: 28707 occurrences
+  timeout: 28733 occurrences
+  authentication: 28515 occurrences
+  memory: 28581 occurrences
+
+Indexing complete.
+Total entries : 80000
+Total keywords: 36
+

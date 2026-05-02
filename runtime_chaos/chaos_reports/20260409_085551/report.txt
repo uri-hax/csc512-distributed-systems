@@ -1,0 +1,94 @@
+========================================================
+  CHAOS TESTING REPORT
+========================================================
+
+  Baseline (no constraints):
+    Wall time : 2.4s
+    Memory    : 26.9 MB
+    CPU usage : 104.9% avg
+    Exit code : 0
+
+  All other profiles are compared against this baseline.
+
+========================================================
+  RESULTS BY PROFILE
+========================================================
+
+  CPU_HALF  [WARN]
+    Wall time : 4.1s  (+69% vs baseline)
+    Exit code : 0
+    Memory    : 35.8 MB  (+33% vs baseline)
+    CPU usage : 51.1% avg  (peak 51.2%)
+    Feedback  :
+      GOOD: Program wrote diagnostic output to stderr during normal operation
+
+  CPU_TENTH  [FAIL: too slow]
+    Wall time : 32.2s  (+1242% vs baseline)
+    Exit code : 0
+    Memory    : 39.9 MB  (+48% vs baseline)
+    CPU usage : 10.0% avg  (peak 10.7%)
+    Feedback  :
+      GOOD: Program wrote diagnostic output to stderr during normal operation
+      WARN: CPU usage was only 10.0% under 'cpu_tenth'
+
+  MEMORY_SQUEEZE  [PASS]
+    Wall time : 2.9s  (+21% vs baseline)
+    Exit code : 0
+    Memory    : 18.8 MB  (-30% vs baseline)
+    CPU usage : 102.0% avg  (peak 102.0%)
+    Feedback  :
+      GOOD: Program wrote diagnostic output to stderr during normal operation
+
+  MEMORY_BOMB  [WARN]
+    Wall time : 3.2s  (+32% vs baseline)
+    Exit code : 0
+    Memory    : 20.9 MB  (-22% vs baseline)
+    CPU usage : 101.3% avg  (peak 101.3%)
+    Feedback  :
+      GOOD: Program wrote diagnostic output to stderr during normal operation
+
+  MEMORY_CEILING  [PASS]
+    Wall time : 2.8s  (+18% vs baseline)
+    Exit code : 0
+    Memory    : 21.4 MB  (-20% vs baseline)
+    CPU usage : 100.5% avg  (peak 100.5%)
+    Feedback  :
+      GOOD: Program wrote diagnostic output to stderr during normal operation
+
+  NETWORK_DEGRADE  [PASS]
+    Wall time : 2.7s  (+12% vs baseline)
+    Exit code : 0
+    Memory    : 26.5 MB  (-2% vs baseline)
+    CPU usage : 103.1% avg  (peak 103.1%)
+    Feedback  :
+      GOOD: Program wrote diagnostic output to stderr during normal operation
+
+  NETWORK_FLAP  [WARN]
+    Wall time : 3.5s  (+45% vs baseline)
+    Exit code : 0
+    Memory    : 25.1 MB  (-7% vs baseline)
+    CPU usage : 105.2% avg  (peak 105.2%)
+    Feedback  :
+      GOOD: Program wrote diagnostic output to stderr during normal operation
+
+========================================================
+  OVERALL VERDICT
+========================================================
+
+  Profiles tested  : 7
+  Passing          : 3
+  Warnings         : 3
+  Failing          : 1
+
+  Failed under:
+ cpu_tenth              ran 1242% slower than baseline
+
+  Warnings:
+WARN: cpu_half               ran 69% slower than baseline
+WARN: memory_bomb            ran 32% slower than baseline
+WARN: network_flap           ran 45% slower than baseline
+
+  Your program failed under some resource constraints.
+  Review the feedback above for each failing profile.
+
+========================================================

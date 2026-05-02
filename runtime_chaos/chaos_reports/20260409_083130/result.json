@@ -1,0 +1,28 @@
+[
+  {
+    "profile": "none",
+    "exit_code": 0,
+    "oom_killed": false,
+    "timed_out": false,
+    "wall_time_s": 1.17,
+    "peak_rss_mb": 0.0,
+    "cpu_peak_pct": 0.0,
+    "cpu_avg_pct": 0.0,
+    "pids_peak": 0,
+    "has_stderr": true,
+    "events": [
+      "[   0.0s] \u00b7  Container: grader-chaos-cdd8c043c8",
+      "[   0.0s] \u00b7  Profile  : none \u2014 clean baseline run",
+      "[   0.0s] \u00b7  Command  : ./log_index"
+    ],
+    "metrics": {
+      "cpu_avg": 0,
+      "cpu_min": 0,
+      "mem_peak": 0,
+      "io_avg": 0,
+      "io_min": 0,
+      "history_sizes": [],
+      "flush_detected": false
+    }
+  }
+]
