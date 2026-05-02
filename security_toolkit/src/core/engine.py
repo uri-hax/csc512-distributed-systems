@@ -1,5 +1,3 @@
-# Scan engine: discovers plugins, selects applicable ones, runs them in parallel, deduplicates findings
-# Dependencies: importlib/pkgutil (plugin discovery), ThreadPoolExecutor (parallel execution)
 from __future__ import annotations
 
 import importlib
@@ -15,6 +13,7 @@ from security_toolkit.core.plugin import ScannerPlugin, instantiate_plugins
 
 logger = logging.getLogger(__name__)
 
+
 # Recursively import all scanner modules to trigger metaclass registration
 def _import_all_plugins() -> None:
     for importer, modname, ispkg in pkgutil.walk_packages(
@@ -25,11 +24,12 @@ def _import_all_plugins() -> None:
             importlib.import_module(modname)
         except Exception:
             logger.warning("Failed to import plugin module %s", modname, exc_info=True)
+
+
 # Engine
 class ScanEngine:
     def __init__(self, *, max_workers: int = 4) -> None:
         self.max_workers = max_workers
-        # Trigger plugin registration by importing all scanner modules
         _import_all_plugins()
         self._plugins: list[ScannerPlugin] = instantiate_plugins()
         logger.info(
@@ -37,16 +37,17 @@ class ScanEngine:
             len(self._plugins),
             [p.name for p in self._plugins],
         )
-    # Core run loop
+
     def run(self, profile: TargetProfile) -> ScanReport:
         report = ScanReport(
-            target=str(profile.path or profile.image or profile.pid or profile.service_url),
+            target=str(
+                profile.path or profile.image or profile.pid or profile.service_url
+            ),
             mode=profile.mode,
         )
 
         applicable = self._select_plugins(profile)
 
-        # Track all plugins with their availability status
         all_plugins_status: dict[str, dict[str, object]] = {}
         for plugin in self._plugins:
             if profile.mode not in plugin.scan_modes:
@@ -86,6 +87,7 @@ class ScanEngine:
         report.sort_by_severity()
         report.finished_at = datetime.now(timezone.utc).isoformat()
         return report
+
     # Internals
     def _select_plugins(self, profile: TargetProfile) -> list[ScannerPlugin]:
         result: list[ScannerPlugin] = []
@@ -105,9 +107,6 @@ class ScanEngine:
         profile: TargetProfile,
         report: ScanReport,
     ) -> ScanReport:
-        # Use ThreadPoolExecutor (not ProcessPoolExecutor) because plugins are I/O-bound,
-        # shelling out to external tools like semgrep, trivy, nuclei
-        # Track plugin execution status
         plugin_status: dict[str, dict[str, object]] = {}
         for plugin in plugins:
             plugin_status[plugin.name] = {
