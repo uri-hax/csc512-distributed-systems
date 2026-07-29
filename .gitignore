@@ -65,3 +65,5 @@ dist/
 # Local educational / notes files (not for repo)
 DEEP_DIVE*.md
 NOTES*.md
+
+.DS_Store

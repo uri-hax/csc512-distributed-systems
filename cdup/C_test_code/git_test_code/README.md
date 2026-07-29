@@ -1,0 +1,1 @@
+Place code examples to test Git source code as a stretch goal or interesting new direction. :)
